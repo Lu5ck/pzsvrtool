@@ -1,0 +1,35 @@
+name: release
+on:
+  workflow_dispatch:
+      inputs:
+        ref:
+          type: string
+          description: reference head
+          required: false
+        tag:
+          type: string
+          description: version tag
+          required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout local repository
+      uses: actions/checkout@v4
+      with:
+        path: .
+        ref: ${{ github.event.inputs.ref }}
+
+    - name: Build RPM (AlmaLinux)
+      uses: ./.github/actions/buildRPM
+
+    - name: Build DEB (Debian)
+      uses: ./.github/actions/buildDEB
+
+    - name: Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "${{ github.workspace }}/build/*"
+        generateReleaseNotes: true
+        tag: ${{ github.event.inputs.tag }}
+        makeLatest: true

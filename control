@@ -1,0 +1,8 @@
+Package: pzsvrtool
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: KWRR Community <6626980+Lu5ck@users.noreply.github.com>
+Depends: bash, procps, findutils, coreutils, gawk, util-linux, tar, wget, lz4, python3, python3-psutil, python3-bcrypt, sqlite3, tmux, lib32gcc-s1
+Description: Scripts to manage Project Zomboid linux server

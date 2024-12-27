@@ -1,0 +1,5 @@
+name: 'almalinux docker'
+description: 'Docker to build RPM'
+runs:
+  using: 'docker'
+  image: 'DockerFile'

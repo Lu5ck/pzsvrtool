@@ -1,0 +1,122 @@
+#!/bin/bash
+
+if [[ $(id -u) == 0 ]]; then
+    echo "[pzsvrtool] Don't run this as root"
+	exit
+fi
+
+pzsvrtool_help() {
+	echo "Usage: pzsvrtool <command> <arg> <options>"
+	echo "Commands list"
+	echo "install <flags>                           Install or update steam and Project Zomboid"
+	echo "      -j or --json                        Backup and restore the previous ProjectZomboidXX.json"
+	echo "      -s or --startserver                 Backup and restore the previous startserver.sh"
+	echo "start                                     Start the server"
+	echo "restart <arg> <option>                    Restart the server"
+	echo "      -t or --time <minutes>              Custom countdown time in minutes"
+	echo "      -b or --backupgrace <minutes>       Skip restart if backup made in past X minutes, useful for crontab schedule"
+	echo "cancelrestart                             Cancel restarting the server"
+	echo "quit <arg> <option>                       Shutdown the server"
+	echo "      -t or --time <minutes>              Custom countdown time in minutes"
+	echo "cancelquit                                Cancel shutting down the server"
+	echo "console <flags>                           Open console to the log and commandline to server if any"
+	echo "      -c or --chatonly                    Show only game chats"
+	echo "consoleold                                Read-only console, if the modern console doesn't work for you"
+	echo "checkmodupdate                            Check and restart on mod update, useful for crontab schedule"
+	echo "message <message>                         Send admin message, useful for crontab schedule"
+	echo "command <command>                         Send any commands, useful for crontab schedule"
+	echo "updateusrpw <username> <new password>     Change user's password"
+	echo "backupnow                                 Backup Project Zomboid saves"
+	echo "resetzpop                                 Reset Project Zomboid zombie population"
+	echo "kill                                      Kill all zomboid server process"
+}
+
+if [ -z "${1}" ]; then
+	pzsvrtool_help
+	exit
+fi
+
+no_arg_check() {
+	if [[ ${@} ]]; then
+		echo "[pzsvrtool] Doesn't accept arguments"
+	fi
+}
+
+case "${1}" in
+
+	install)
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh install_steam ${@:2}
+		;;
+
+	start)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh start_server
+		;;
+
+	quit)
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh quit_server ${@:2}
+		;;
+
+	restart)
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh restart_server ${@:2}
+		;;
+
+	cancelrestart|cancelquit)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh cancel_shutdown
+		;;
+
+	checkmodupdate)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh checkmodupdate
+		;;
+
+	updateusrpw)
+		if [[ "${@:3}" =~ ^[a-zA-Z0-9]+$ ]]; then
+			exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh updateusrpw ${2} ${3}
+		else
+			echo "[pzsvrtool] Invalid password, only allow alphanumeric with no space"
+		fi
+		;;
+
+	console)
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh console ${@:2}
+		;;
+
+	consoleold)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh consoleold
+		;;
+
+	backupnow)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh backupNow
+		;;
+
+	resetzpop)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh resetzpop
+		;;
+
+	kill)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh kill
+		;;
+
+	message|msg)
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh send_message "${@:2}"
+		;;
+
+	command|cmd)
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh send_command "${@:2}"
+		;;
+
+	help)
+		pzsvrtool_help
+		;;
+
+	*)
+		echo "[pzsvrtool] No such command: ${1}"
+		pzsvrtool_help
+		;;
+esac

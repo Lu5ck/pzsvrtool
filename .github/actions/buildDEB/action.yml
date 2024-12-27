@@ -1,0 +1,5 @@
+name: 'debian docker'
+description: 'Docker to build DEB'
+runs:
+  using: 'docker'
+  image: 'DockerFile'

@@ -1,0 +1,35 @@
+name: onPullPush
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+      inputs:
+        ref:
+          type: string
+          description: reference head
+          required: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout local repository
+      uses: actions/checkout@v4
+      with:
+        path: .
+        ref: ${{ github.event.inputs.ref }}
+
+    - name: Build RPM (AlmaLinux)
+      uses: ./.github/actions/buildRPM
+
+    - name: Build DEB (Debian)
+      uses: ./.github/actions/buildDEB
+
+    - name: Generate Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pzsvrtool
+        path: ${{ github.workspace }}/build/*
