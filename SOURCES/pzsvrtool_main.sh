@@ -351,9 +351,13 @@ checkmodupdate() {
     fi
 
     if [[ $(python3 /usr/libexec/pzsvrtool/pzsvrtool_checkmodupdate.py) == "true" ]]; then
-        echo "[pzsvrtool] Mod update found"
-        send_message "Mod update detected"
-        restart_server 
+        if [[ "$(is_shutdown_screen_active)" == "true" ]]; then
+            echo "[pzsvrtool] Mod update detected, countdown already in process"
+        else
+            echo "[pzsvrtool] Mod update detected, executing restart command"
+            send_message "Mod update detected"
+            restart_server
+        fi
     else
         echo "[pzsvrtool] No update found"
     fi
