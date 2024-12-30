@@ -1,5 +1,14 @@
 ## 🧰️ pzsvrtool
-A collections of bash scripts and pythons to provide basic management of Project Zomboid linux server. Made by game server owner for game server owners.
+Did you...
+- thought that running a docker on that expensive VPS is so wasting on your already limited paid resources?
+- suddenly thought of doing a shutdown on the current restart countdown so you can apply some quick changes?
+- saw those huge backup zip files, thinking it did be nice to be smaller so you can have more on your already limited resources?
+- Tried VPS with virtualization securities that prohibit you from using some PZ tools because it uses some fancy ways to detach and attach PZ?
+- get annoyed that some PZ tools doesn't restart because it couldn't detect unlisted mods updates, mods that you don't want others to use?
+- get annoyed that your scheduled restart occur right after a mod update restart?
+- hate it that when you try to update Zomboid but some PZ tools don't help you backup nor restore the previous modified `.json` or `start-server.sh`?
+
+Well, I do and I waited but these tools never get updated so I made my own, much easier and cleaner. All in all, pzsvrtool is made by server owner for server owners.
 
 ## 🐧 Supported Platforms
 Tested on Almalinux 9.5. Theorically the scripts should work in all linux enviroments as long the followings are met<details>
