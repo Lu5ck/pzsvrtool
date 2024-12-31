@@ -66,6 +66,7 @@ async def main():
         if (asyncio.get_event_loop().time() - start_time) > 60:
             bRunning = False
             print("timeout")
+            await pzsvrtool_common.send_discord_webhook("checkmodsneedupdate timeout")
             break
         await asyncio.sleep(1) # Instead of waiting full second, it will now read logs
 

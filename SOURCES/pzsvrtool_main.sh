@@ -9,6 +9,7 @@ config_setup() {
     prompt_non_empty_numeric countdownTime "Enter shutdown Countdown Time (in minutes): " "Countdown Time"
     prompt_non_empty_boolean backup "Enable Backup After Shutdown (y/n): " "Backup option"
     prompt_non_empty_numeric backupLimit "Enter maximum number of backups: " "Backup Limit"
+    prompt_allow_empty_without_space discord_webhook_notice "Enter discord general webhook, empty if none: " "Discord webhook URL"
 
     if [ ! -d ~/${configFolder} ]; then
         mkdir ~/${configFolder}
@@ -22,6 +23,7 @@ config_setup() {
     cfg_write ~/${configFolder}/${configFile} countdownTime ${countdownTime}
     cfg_write ~/${configFolder}/${configFile} backup ${backup}
     cfg_write ~/${configFolder}/${configFile} backupLimit ${backupLimit}
+    cfg_write ~/${configFolder}/${configFile} discord_webhook_notice ${discord_webhook_notice}
 
     # Confirm completion
     echo "[pzsvrtool] Configuration saved to ${HOME}/${configFolder}/${configFile}"
@@ -99,6 +101,7 @@ install_steam() {
 
 start_server() {
     exit_if_no_tmux
+    exit_if_no_common_python_module
     check_config
     exit_if_has_pz
     exit_if_has_pzscreen
@@ -356,6 +359,7 @@ checkmodupdate() {
         else
             echo "[pzsvrtool] Mod update detected, executing restart command"
             send_message "Mod update detected"
+            send_discord_webhook "Mod update detected"
             restart_server
         fi
     else

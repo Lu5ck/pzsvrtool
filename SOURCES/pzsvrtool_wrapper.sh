@@ -20,6 +20,7 @@ while true; do
         exit;
     fi
 
+    send_discord_webhook "Server is booting up, please wait"
     write_boot_log "Server is booting up"
 
     # Flag to know if is safe shutdown or not. We change this flag at launch and during controlled shutdown
@@ -33,6 +34,7 @@ while true; do
         bash ~/${zomboidCoreServerFolderName}/start-server.sh -servername "${zomboidServerName}" -adminusername "${1}"
 	fi
 
+    send_discord_webhook "Server has shutdown"
     write_boot_log "Server has shutdown"
     # Delay 2s to make sure everything terminated
     sleep 2
@@ -42,9 +44,16 @@ while true; do
     # We also don't want it to keep backing up the same thing which will override the older backup due to backup limits
     if [[ $(($(date +%s)-${pzsvrtool_wrapper_startTime})) -ge 120 ]]; then
         if [[ ${backup}=="true" ]]; then
-            write_boot_log "Backing up"
+            if [[ $(cfg_read ~/${configFolder}/${varFile} safeShutdown) == "true" ]]; then
+                send_discord_webhook "Safe shutdown detected, backing up"
+                write_boot_log "Safe shutdown detected, backing up"
+            else
+                send_discord_webhook "Adnormal shutdown detected, backing up"
+                write_boot_log "Adnormal shutdown detected, backing up"
+            fi
             backup_files
-            write_boot_log "Backup done"
+            send_discord_webhook "Backup completed"
+            write_boot_log "Backup completed"
             sleep 2
         fi
         pzsvrtool_wrapper_retry=0
@@ -60,11 +69,13 @@ while true; do
 
     # We stop if retried more than 3 times
     if [[ pzsvrtool_wrapper_retry -gt 3 ]]; then
+        send_discord_webhook "Bootloop detected, bootup attempt halted"
+        write_boot_log "Bootloop detected. bootup attempt halted"
         logger -p user.err "[pzsvrtool] Project Zomboid server bootup stuck in loop. Server bootup halted."
-        write_boot_log "Bootloop detected. Exiting"
         exit;
     elif [[ pzsvrtool_wrapper_retry -gt 0 ]]; then
-        write_boot_log "Bootloot suspected - Retry attempt ${pzsvrtool_wrapper_retry}"
+        send_discord_webhook "Bootloop suspected - Retry attempt ${pzsvrtool_wrapper_retry}"
+        write_boot_log "Bootloop suspected - Retry attempt ${pzsvrtool_wrapper_retry}"
     fi
 done
 

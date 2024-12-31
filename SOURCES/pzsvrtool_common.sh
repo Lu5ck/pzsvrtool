@@ -46,7 +46,22 @@ if [ -f ~/${configFolder}/${configFile} ]; then
 	backup=$(cfg_read ~/${configFolder}/${configFile} backup)
 	backupLimit=$(cfg_read ~/${configFolder}/${configFile} backupLimit)
 	pzRootAdmin=$(cfg_read ~/${configFolder}/${configFile} pzRootAdmin)
+	discord_webhook_notice=$(cfg_read ~/${configFolder}/${configFile} discord_webhook_notice)
 fi
+
+# Function to prompt and allow empty input without space
+prompt_allow_empty_without_space() {
+    local input
+    while true; do
+        read -p "${2}" input
+        if [[ "${input}" =~ [[:space:]] ]]; then
+            echo "[pzsvrtool] ${3} cannot contain spaces. Please try again."
+        else
+            eval "${1}=\"${input}\""
+            break
+        fi
+    done
+}
 
 # Function to prompt and validate non-empty input
 prompt_non_empty() {
@@ -226,6 +241,18 @@ exit_if_no_common_python_module() {
             exit
         fi
     fi
+
+    if command -v rpm &>/dev/null; then
+        if ! rpm -q python3-aiohttp &>/dev/null; then
+            echo "[pzsvrtool] python3-aiohttp is NOT installed."
+            exit
+        fi
+    elif command -v dpkg-query &>/dev/null; then
+        if ! dpkg-query -l python3-aiohttp &>/dev/null; then
+            echo "[pzsvrtool] python3-aiohttp is NOT installed."
+            exit
+        fi
+    fi
 }
 
 # Not tested, don't use
@@ -318,6 +345,15 @@ write_boot_log() {
 	fi
     echo "${timestamp} ${message}" >> ~/${configFolder}/boot_log.txt
 	shift
+}
+
+send_discord_webhook() {
+	if [[ -n ${discord_webhook_notice} ]]; then
+		curl -f -H "Content-Type: application/json" \
+			-X POST \
+			-d "{\"content\": \"${1}\"}" \
+			"${discord_webhook_notice}"
+	fi
 }
 
 customMinutes=""

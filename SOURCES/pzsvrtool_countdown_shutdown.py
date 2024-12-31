@@ -42,7 +42,7 @@ async def announcement():
 
     message += "\""
     pzsvrtool_common.send_keys_to_tmux_session(pzsvrtool_common.get_tmux_session(), message)
-    pzsvrtool_common.modify_config(os.path.expanduser("~/pzsvrtool/.varfile"), "announceTimeleft", f"{timeleft}")
+    await pzsvrtool_common.send_discord_webhook(message.removeprefix("servermsg \"").removesuffix("\""))
 
 # We kick players to force all the ingame cells to be unloaded
 # I just got this impression that some data are not saved because of it
@@ -154,10 +154,11 @@ async def command_listener():
                     tailProc.terminate()
                     tailProc = None
                 pzsvrtool_common.send_keys_to_tmux_session(pzsvrtool_common.get_tmux_session(), f"servermsg \"Operator has changed countdown time to {commands[1]} minutes.\"")
-                pzsvrtool_common.modify_config(os.path.expanduser("~/pzsvrtool/.varfile"), "announceTimeleft", f"{commands[1]}")
+                await pzsvrtool_common.send_discord_webhook(f"Operator has changed countdown time to {commands[1]} minutes.")
             elif commands[0] == "stop":
                 bRunning = False
                 pzsvrtool_common.send_keys_to_tmux_session(pzsvrtool_common.get_tmux_session(), "servermsg \"Operator has cancelled the countdown.\"")
+                await pzsvrtool_common.send_discord_webhook("Operator has cancelled the countdown.")
         except asyncio.TimeoutError:
             continue
 

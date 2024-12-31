@@ -8,6 +8,7 @@ import subprocess
 import fnmatch
 import getpass
 import psutil
+import aiohttp
 
 def is_process_active(process_name):
     username = getpass.getuser()
@@ -94,10 +95,14 @@ def get_config_value(file_path, key):
                         return value_in_file
     return None  # Return None if the key is not found
 
-def is_xclip_installed():
-    try:
-        subprocess.run(["which", "xclip"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        return True
-    except subprocess.CalledProcessError:
-        return False
-
+async def send_discord_webhook(message):
+    async with aiohttp.ClientSession() as session:
+        try:
+            webhook_url = get_config_value(os.path.expanduser("~/pzsvrtool/pzsvrtool.config"), "discord_webhook_notice")
+            data = {
+                "content": message,
+            }
+            if webhook_url:
+                    await session.post(url=webhook_url, json=data)
+        except:
+            pass
