@@ -59,11 +59,11 @@ while true; do
     fi
 
     # We stop if retried more than 3 times
-    if [[ pzsvrtool_wrapper_retry -ge 3 ]]; then
+    if [[ pzsvrtool_wrapper_retry -gt 3 ]]; then
         logger -p user.err "[pzsvrtool] Project Zomboid server bootup stuck in loop. Server bootup halted."
         write_boot_log "Bootloop detected. Exiting"
         exit;
-    else
+    elif [[ pzsvrtool_wrapper_retry -gt 0 ]]; then
         write_boot_log "Bootloot suspected - Retry attempt ${pzsvrtool_wrapper_retry}"
     fi
 done
