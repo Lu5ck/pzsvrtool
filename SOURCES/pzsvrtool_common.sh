@@ -298,14 +298,6 @@ is_shutdown_screen_active() {
 	fi
 }
 
-is_checkmodupdate_screen_active() {
-	if tmux has-session -t "pzsvrtool_$(id -u)_checkmodupdate" 2>/dev/null; then
-		echo "true"
-	else
-		echo "false"
-	fi
-}
-
 sql_query() {
 	# $1 is db_path $2 is query
 	if [[ -z "${1}" || -z "${2}" ]]; then

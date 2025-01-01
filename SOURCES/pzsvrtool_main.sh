@@ -386,7 +386,7 @@ checkmodupdate() {
     exit_if_no_pz
     exit_if_no_pzscreen
 
-    if [[ "$(is_checkmodupdate_screen_active)" == "true" ]]; then
+    if pgrep -u $(id -u) -fa "pzsvrtool_checkmodupdate.py" > /dev/null; then
         echo "[pzsvrtool] checkmodupdate already running"
         exit
     fi
