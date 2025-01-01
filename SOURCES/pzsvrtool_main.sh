@@ -2,20 +2,54 @@
 
 source /usr/libexec/pzsvrtool/pzsvrtool_common.sh
 
-# Only run at start, edit the config file otherwise
+# Called when doing fresh install
+# Also called by reconfig thus the if else
 config_setup() {
     # Prompt the user for input
-    prompt_non_empty zomboidServerName "Enter Zomboid Server Name: " "Zomboid Server Name"
-    prompt_non_empty_numeric countdownTime "Enter shutdown Countdown Time (in minutes): " "Countdown Time"
-    prompt_non_empty_boolean backup "Enable Backup After Shutdown (y/n): " "Backup option"
-    prompt_non_empty_numeric backupLimit "Enter maximum number of backups: " "Backup Limit"
-    prompt_allow_empty_without_space discord_webhook_notice "Enter discord general webhook, empty if none: " "Discord webhook URL"
+    if [[ -z ${zomboidServerName} ]]; then
+        prompt_non_empty zomboidServerName "Enter Zomboid Server Name: " "Zomboid Server Name"
+    else
+        prompt_non_empty zomboidServerName "Enter Zomboid Server Name [Current=${zomboidServerName}]: " "Zomboid Server Name"
+    fi
+    if [[ -z ${countdownTime} ]]; then
+        prompt_non_empty_numeric countdownTime "Enter shutdown Countdown Time (in minutes): " "Countdown Time"
+    else
+        prompt_non_empty_numeric countdownTime "Enter shutdown Countdown Time (in minutes) [Current=${countdownTime}]: " "Countdown Time"
+    fi
+    if [[ -z ${backup} ]]; then
+        prompt_non_empty_boolean backup "Enable Backup After Shutdown (y/n): " "Backup option"
+    else
+        if [[ ${backup} == "true" ]]; then
+            local temp="y"
+        else
+            local temp="n"
+        fi
+        prompt_non_empty_boolean backup "Enable Backup After Shutdown (y/n) [Current=${temp}]: " "Backup option"
+    fi
+    if [[ -z ${backupLimit} ]]; then
+        prompt_non_empty_numeric backupLimit "Enter maximum number of backups: " "Backup Limit"
+    else
+        prompt_non_empty_numeric backupLimit "Enter maximum number of backups [Current=${backupLimit}]: " "Backup Limit"
+    fi
+    if [[ -z ${discord_webhook_notice} ]]; then
+        prompt_allow_empty_without_space_default discord_webhook_notice "Enter discord notice webhook, empty if none: " "Discord webhook URL"
+    else
+        echo "Current Webhook = ${discord_webhook_notice}"
+        prompt_allow_empty_without_space_default discord_webhook_notice "Enter discord notice webhook, empty if no change: " "Discord webhook URL"
+    fi
+    if [[ -n ${pzRootAdmin} ]]; then
+        prompt_non_empty pzRootAdmin "Enter root admin name [Current=${pzRootAdmin}]: " "Root Admin Name"
+    fi
 
-    if [ ! -d ~/${configFolder} ]; then
+    if [[ ! -d ~/${configFolder} ]]; then
         mkdir ~/${configFolder}
     fi
 
-    if [ ! -f ~/${configFolder}/${configFile} ]; then
+    if [[ -f ~/${configFolder}/${configFile} ]]; then
+        : > ~/${configFolder}/${configFile}
+    fi
+
+    if [[ ! -f ~/${configFolder}/${configFile} ]]; then
         touch ~/${configFolder}/${configFile}
     fi
 
@@ -24,6 +58,10 @@ config_setup() {
     cfg_write ~/${configFolder}/${configFile} backup ${backup}
     cfg_write ~/${configFolder}/${configFile} backupLimit ${backupLimit}
     cfg_write ~/${configFolder}/${configFile} discord_webhook_notice ${discord_webhook_notice}
+    
+    if [[ -n ${pzRootAdmin} ]]; then
+        cfg_write ~/${configFolder}/${configFile} pzRootAdmin ${pzRootAdmin}
+    fi
 
     # Confirm completion
     echo "[pzsvrtool] Configuration saved to ${HOME}/${configFolder}/${configFile}"

@@ -50,14 +50,16 @@ if [ -f ~/${configFolder}/${configFile} ]; then
 fi
 
 # Function to prompt and allow empty input without space
-prompt_allow_empty_without_space() {
+prompt_allow_empty_without_space_default() {
     local input
     while true; do
         read -p "${2}" input
         if [[ "${input}" =~ [[:space:]] ]]; then
             echo "[pzsvrtool] ${3} cannot contain spaces. Please try again."
         else
-            eval "${1}=\"${input}\""
+			if [[ -n ${input} ]]; then
+				eval "${1}=\"${input}\""
+			fi
             break
         fi
     done
@@ -144,6 +146,7 @@ prompt_password() {
 # Incase user modify the config file wrongly
 check_config() {
 	if [[ ! -f ~/${configFolder}/${configFile} ]]; then
+		echo "[pzsvrtool] Missing config file, setting up config"
 		config_setup
 	fi
 
@@ -158,17 +161,37 @@ check_config() {
 		fi
 
 		# Check if the line starts or ends with "="
-		if [[ "${line}" =~ ^=|=$ ]]; then
+		if [[ "${line}" =~ ^= ]]; then
 			echo "[pzsvrtool] Error: Invalid formatting in config file at line $line_number: $line"
 			exit 1
 		fi
 
-		# Optionally, you can check for valid key names (alphanumeric + underscores)
-		if [[ ! "${line}" =~ ^[a-zA-Z0-9_]+=[^=]+$ ]]; then
+		# Check for valid key names (alphanumeric + underscores)
+		if [[ ! "${line}" =~ ^[a-zA-Z0-9_]+=[^=]*$ ]]; then
 			echo "[pzsvrtool] Error: Invalid key-value format in config file at line $line_number: $line"
 			exit 1
 		fi
 	done < ~/${configFolder}/${configFile}
+
+	if [[ -z ${zomboidServerName} ]]; then
+		prompt_non_empty zomboidServerName "Enter Zomboid Server Name: " "Zomboid Server Name"
+		cfg_write ~/${configFolder}/${configFile} zomboidServerName ${zomboidServerName}
+	fi
+
+	if [[ -z ${countdownTime} ]]; then
+		prompt_non_empty_numeric countdownTime "Enter shutdown Countdown Time (in minutes): " "Countdown Time"
+		cfg_write ~/${configFolder}/${configFile} countdownTime ${countdownTime}
+	fi
+
+	if [[ -z ${backup} ]]; then
+		prompt_non_empty_boolean backup "Enable Backup After Shutdown (y/n): " "Backup option"
+		cfg_write ~/${configFolder}/${configFile} backup ${backup}
+	fi
+
+	if [[ -z ${backupLimit} ]]; then
+		prompt_non_empty_numeric backupLimit "Enter maximum number of backups: " "Backup Limit"
+		cfg_write ~/${configFolder}/${configFile} backupLimit ${backupLimit}
+	fi
 }
 
 get_pzInstance() {

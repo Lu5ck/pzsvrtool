@@ -29,6 +29,7 @@ pzsvrtool_help() {
 	echo "backupnow                                 Backup Project Zomboid saves"
 	echo "resetzpop                                 Reset Project Zomboid zombie population"
 	echo "kill                                      Kill all zomboid server process"
+	echo "reconfig                                  Reconfigure settings"
 }
 
 if [ -z "${1}" ]; then
@@ -109,6 +110,11 @@ case "${1}" in
 
 	command|cmd)
 		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh send_command "${@:2}"
+		;;
+
+	reconfig)
+		no_arg_check
+		exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh config_setup
 		;;
 
 	help)
