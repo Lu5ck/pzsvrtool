@@ -55,13 +55,14 @@ The scripts should provide all basics you need to run a linux PZ server.
 - Change user password
 - Reset zombie population
 - Auto backup start-server-sh and ProjectZomboidXX.json when updating PZ with option to auto revert them
+- Supports discord webhook to be informed of bootup, shutdown, backup, restart, bootloop and checkmodsneedupdate status
 
 ## ❤️ Support the work
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y8CX2QA) <br>
 I pretty much made this for a community server of mine which is totally community funded. If it went dead then I don't see a point in maintaining the script as well.
 
 ## 💻 Installations
-For Fedora / RHEL / Rocky Linux / AlmaLinux, download RPM and run `sudo dnf install <rpm file name>` then run `sudo dnf install python3-bcrypt glibc.i686`, accept key if asked.
+For Fedora / RHEL / Rocky Linux / AlmaLinux, download RPM and run `sudo dnf install <rpm file name>` then run `sudo dnf install python3-bcrypt python3-aiohttp glibc.i686`, accept key if asked.
 
 For Debian / Ubuntu, download DEB and place it in `/tmp` then run `sudo apt-get install /tmp/<deb file name>`.
 
@@ -92,6 +93,7 @@ updateusrpw <username> <new password>     Change user's password
 backupnow                                 Backup Project Zomboid saves
 resetzpop                                 Reset Project Zomboid zombie population
 kill                                      Kill all zomboid server process
+reconfig                                  Reconfigure settings
 ```
 
 ## 📂 Directories
