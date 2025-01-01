@@ -291,7 +291,7 @@ get_pzScreenID() {
 }
 
 is_shutdown_screen_active() {
-	if tmux has-session -t "pzsvrtool_shutdown" 2>/dev/null; then
+	if tmux has-session -t "pzsvrtool_$(id -u)_shutdown" 2>/dev/null; then
 		echo "true"
 	else
 		echo "false"
@@ -299,7 +299,7 @@ is_shutdown_screen_active() {
 }
 
 is_checkmodupdate_screen_active() {
-	if tmux has-session -t "pzsvrtool_checkmodupdate" 2>/dev/null; then
+	if tmux has-session -t "pzsvrtool_$(id -u)_checkmodupdate" 2>/dev/null; then
 		echo "true"
 	else
 		echo "false"
