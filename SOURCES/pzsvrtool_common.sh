@@ -408,18 +408,8 @@ parse_args_restart() {
 		esac
 	done
 
-	if [[ ! "${customMinutes}" =~ ^-?[0-9]+$ ]]; then
-		echo "[pzsvrtool] Invalid value for \"time\""
-		exit 1
-	fi
-	
-	if [[ "${backupGrace}" =~ ^-?[0-9]+$ ]]; then
-		echo "[pzsvrtool] Invalid value \"backupgrace\""
-		exit 1
-	fi
-
     # After processing valid flags, check if there are leftover positional arguments
-    if [[ $# -gt 0 ]]; then
+    if [ $# -gt 0 ]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
@@ -457,13 +447,8 @@ parse_args_quit() {
 		esac
 	done
 
-	if [[ ! "${customMinutes}" =~ ^-?[0-9]+$ ]]; then
-		echo "[pzsvrtool] Invalid value for \"time\""
-		exit 1
-	fi
-
     # After processing valid flags, check if there are leftover positional arguments
-    if [[ $# -gt 0 ]]; then
+    if [ $# -gt 0 ]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
@@ -505,7 +490,7 @@ parse_args_install() {
     done
 
     # After processing valid flags, check if there are leftover positional arguments
-    if [[ $# -gt 0 ]]; then
+    if [ $# -gt 0 ]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
@@ -542,7 +527,7 @@ parse_args_console() {
     done
 
     # After processing valid flags, check if there are leftover positional arguments
-    if [[ $# -gt 0 ]]; then
+    if [ $# -gt 0 ]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
