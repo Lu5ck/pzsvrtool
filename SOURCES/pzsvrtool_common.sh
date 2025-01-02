@@ -100,7 +100,7 @@ prompt_non_empty_numeric() {
 	local input
 	while true; do
 		read -p "${2}" input
-		if [ -z "${input}" ]; then
+		if [[ -z "${input}" ]]; then
 			echo "[pzsvrtool] ${3} cannot be empty. Please try again."
 		elif [[ "${input}" =~ ^[0-9]+$ ]]; then
 			eval "${1}=\"${input}\""
@@ -196,7 +196,7 @@ check_config() {
 
 get_pzInstance() {
 	local pzPID=$(pgrep -u $(id -un) -f ProjectZomboid)
-	if [ -z "${pzPID}" ]; then
+	if [[ -z "${pzPID}" ]]; then
 		echo "false"
 	else
 		echo ${pzPID}
@@ -282,7 +282,7 @@ exit_if_no_common_python_module() {
 get_pzScreenID() {
 	tmux list-sessions -F "#{session_name}" | while read -r session; do
 		tmux list-panes -t "${session}" -F "#{pane_index}" | while read -r pane; do
-			OUTPUT=$(tmux capture-pane -t "${session}.${pane}" -p -S -100)
+			ouput=$(tmux capture-pane -t "${session}.${pane}" -p -S -100)
 			if echo "${output}" | grep -q "pzsvrtool_wrapper"; then
 				echo ${session}
 			fi
@@ -314,7 +314,7 @@ sql_query() {
 
 backup_files() {
 	local pzBackup=$(pgrep -u $(id -un) -f "tar --ignore-failed-read --warning=no-all -chf.*Zomboid")
-	if [ -n "${pzBackup}" ]; then
+	if [[ -n "${pzBackup}" ]]; then
 		echo "false"
 		return
 	fi
@@ -336,7 +336,7 @@ backup_files() {
 	file_count=$(find "${backupDir}" -type f -name "*.tar.lz4" | wc -l)
 
 	# Delete oldest backups if exceed limit
-	if [ "${file_count}" -gt "${backupLimit}" ]; then
+	if [[ "${file_count}" -gt "${backupLimit}" ]]; then
 		# Find .tar.lz4 files, sort by modification time (oldest first), and delete the extras
 		find "${backupDir}" -type f -name "*.tar.lz4" -printf '%T@ %p\n' | \
 		sort -n | \
@@ -409,7 +409,7 @@ parse_args_restart() {
 	done
 
     # After processing valid flags, check if there are leftover positional arguments
-    if [ $# -gt 0 ]; then
+    if [[ $# -gt 0 ]]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
@@ -448,7 +448,7 @@ parse_args_quit() {
 	done
 
     # After processing valid flags, check if there are leftover positional arguments
-    if [ $# -gt 0 ]; then
+    if [[ $# -gt 0 ]]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
@@ -490,7 +490,7 @@ parse_args_install() {
     done
 
     # After processing valid flags, check if there are leftover positional arguments
-    if [ $# -gt 0 ]; then
+    if [[ $# -gt 0 ]]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
@@ -527,7 +527,7 @@ parse_args_console() {
     done
 
     # After processing valid flags, check if there are leftover positional arguments
-    if [ $# -gt 0 ]; then
+    if [[ $# -gt 0 ]]; then
         echo "[pzsvrtool] Unexpected arguments: $*"
         exit 1
     fi
