@@ -408,12 +408,12 @@ parse_args_restart() {
 		esac
 	done
 
-	if [[ ! "${customMinutes}" =~ ^-?[0-9]+$ ]]; then
+	if [[ -n ${customMinutes} && ! "${customMinutes}" =~ ^-?[0-9]+$ ]]; then
 		echo "[pzsvrtool] Invalid value for \"time\""
 		exit 1
 	fi
 	
-	if [[ "${backupGrace}" =~ ^-?[0-9]+$ ]]; then
+	if [[ -n ${backupGrace} && ! "${backupGrace}" =~ ^-?[0-9]+$ ]]; then
 		echo "[pzsvrtool] Invalid value \"backupgrace\""
 		exit 1
 	fi
@@ -457,7 +457,7 @@ parse_args_quit() {
 		esac
 	done
 
-	if [[ ! "${customMinutes}" =~ ^-?[0-9]+$ ]]; then
+	if [[ -n ${customMinutes} && ! "${customMinutes}" =~ ^-?[0-9]+$ ]]; then
 		echo "[pzsvrtool] Invalid value for \"time\""
 		exit 1
 	fi
