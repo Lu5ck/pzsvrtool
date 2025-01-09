@@ -117,9 +117,9 @@ install_steam() {
     if [[ -n ${installJson} ]]; then
         if [[ -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json && -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.old ]]; then
             export JQ_SPACES=1
-            local backupVmArgs=$(jq ".vmArgs" "~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.old")
-            local originalPerm=$(stat -c "%a" "~/${zomboidCoreServerFolderName}/ProjectZomboid64.json")
-            jq --argjson backupVmArgs "${backupVmArgs}" ".vmArgs = ${backupVmArgs}" "~/${zomboidCoreServerFolderName}/ProjectZomboid64.json" | jq "." | sed "s/  /\t/g" > "~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.temp"
+            local backupVmArgs=$(jq ".vmArgs" ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.old)
+            local originalPerm=$(stat -c "%a" ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json)
+            jq --argjson backupVmArgs "${backupVmArgs}" ".vmArgs = ${backupVmArgs}" ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json | jq "." | sed "s/  /\t/g" > ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.temp
             mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.original
             mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.temp ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json
             chmod "${originalPerm}" ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json
@@ -127,9 +127,9 @@ install_steam() {
 
         if [[ -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json && -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.old ]]; then
             export JQ_SPACES=1
-            local backupVmArgs=$(jq ".vmArgs" "~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.old")
-            local originalPerm=$(stat -c "%a" "~/${zomboidCoreServerFolderName}/ProjectZomboid32.json")
-            jq --argjson backupVmArgs "${backupVmArgs}" ".vmArgs = ${backupVmArgs}" "~/${zomboidCoreServerFolderName}/ProjectZomboid32.json" | jq "." | sed "s/  /\t/g" > "~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.temp"
+            local backupVmArgs=$(jq ".vmArgs" ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.old)
+            local originalPerm=$(stat -c "%a" ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json)
+            jq --argjson backupVmArgs "${backupVmArgs}" ".vmArgs = ${backupVmArgs}" ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json | jq "." | sed "s/  /\t/g" > ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.temp
             mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.original
             mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.temp ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json
             chmod "${originalPerm}" ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json
