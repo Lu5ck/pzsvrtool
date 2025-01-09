@@ -24,4 +24,4 @@ chmod 644 pzsvrtool/usr/libexec/pzsvrtool/pzsvrtool_common.sh
 mv -f pzsvrtool/usr/libexec/pzsvrtool/pzsvrtool pzsvrtool/usr/bin
 cp control pzsvrtool/DEBIAN/
 dpkg-deb --build pzsvrtool/
-mv -f pzsvrtool.deb "$workdir/build"
+mv -f pzsvrtool.deb "$workdir/build/pzsvrtool.x86_64.deb"
