@@ -45,7 +45,7 @@ async def main():
     
     task = asyncio.create_task(read_log(proc))
     start_time = asyncio.get_event_loop().time()
-    timeout = 5
+    timeout = 2
 
     while bRunning:
         # We check if the server booted or not, can't have this python running forever
