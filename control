@@ -1,5 +1,5 @@
 Package: pzsvrtool
-Version: 1.2.11
+Version: 1.3.11
 Section: utils
 Priority: optional
 Architecture: amd64 i386

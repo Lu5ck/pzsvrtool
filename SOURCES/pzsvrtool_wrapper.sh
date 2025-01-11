@@ -26,6 +26,8 @@ while true; do
     # Flag to know if is safe shutdown or not. We change this flag at launch and during controlled shutdown
     cfg_write ~/${configFolder}/${varFile} "safeShutdown" "false"
 
+    tmux new-session -d -s "pzsvrtool_$(id -u)_checkserverstarted" "python3 /usr/libexec/pzsvrtool/pzsvrtool_checkserverstarted.py"
+
 	if [[ "${1}" && "${2}" ]]; then
 		bash ~/${zomboidCoreServerFolderName}/start-server.sh -servername "${zomboidServerName}" -adminusername "${1}" -adminpassword "${2}"
         # Get rid of $2 as we are done with this
