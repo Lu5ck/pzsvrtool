@@ -1,5 +1,5 @@
 Name:           pzsvrtool
-Version:        1.2.11
+Version:        1.3.11
 Release:        1%{?dist}
 Summary:        Scripts to manage Project Zomboid Server
 
@@ -14,6 +14,7 @@ Source5:        pzsvrtool
 Source6:        pzsvrtool_common.py
 Source7:        pzsvrtool_checkmodupdate.py
 Source8:        pzsvrtool_updateusrpw.py
+Source9:        pzsvrtool_checkserverstarted.py
 
 Requires:       bash, procps, findutils, coreutils, gawk, util-linux, tar, wget, lz4, python3, python3-psutil, epel-release, sqlite, tmux
 
@@ -33,6 +34,7 @@ install -m 0755 %{SOURCE4} %{buildroot}/usr/libexec/pzsvrtool
 install -m 0644 %{SOURCE6} %{buildroot}/usr/libexec/pzsvrtool
 install -m 0755 %{SOURCE7} %{buildroot}/usr/libexec/pzsvrtool
 install -m 0755 %{SOURCE8} %{buildroot}/usr/libexec/pzsvrtool
+install -m 0755 %{SOURCE9} %{buildroot}/usr/libexec/pzsvrtool
 
 %files
 /usr/bin/pzsvrtool
@@ -44,6 +46,7 @@ install -m 0755 %{SOURCE8} %{buildroot}/usr/libexec/pzsvrtool
 /usr/libexec/pzsvrtool/pzsvrtool_common.py
 /usr/libexec/pzsvrtool/pzsvrtool_checkmodupdate.py
 /usr/libexec/pzsvrtool/pzsvrtool_updateusrpw.py
+/usr/libexec/pzsvrtool/pzsvrtool_checkserverstarted.py
 
 %post
 # Note: glibc.i686 will install libgcc.i686, libgcc.i686 alone is not enough unlike Debian package

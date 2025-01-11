@@ -9,6 +9,8 @@ import fnmatch
 import getpass
 import psutil
 import aiohttp
+import time
+from datetime import datetime
 
 def is_process_active(process_name):
     username = getpass.getuser()
@@ -106,3 +108,9 @@ async def send_discord_webhook(message):
                     await session.post(url=webhook_url, json=data)
         except:
             pass
+
+def write_log(message: str):
+    timestamp = int(time.time())
+    date_time = datetime.now().strftime("%d-%b-%Y %H:%M")
+    with open(os.path.expanduser("~/pzsvrtool/boot_log.txt"), 'a') as file:
+        file.write(f"[{timestamp}] [{date_time}] {message}\n")
