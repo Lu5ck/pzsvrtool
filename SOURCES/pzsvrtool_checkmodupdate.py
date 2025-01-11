@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-# Performs two tasks at the same time which are countdown and read log
+# Performs two tasks at the same time which are timeout and read log
 # Require non-blocking solution
-# Threading will have two threads, one waiting for 1s most of the time.
+# Threading will have two threads, one waiting for log while other counting timeout with sleep
 # Thus async make better sense with 1 thread doing two tasks
 # await is the yield point, isntead of waiting, do other await jobs
 

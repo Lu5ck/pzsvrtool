@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-# Performs up to two tasks at the same time which are timeout and check log for server started
+# Performs two tasks at the same time which are timeout and read log
 # Require non-blocking solution
-# Threading will have up to two threads, one waiting for log, one counting and deciding timeout.
+# Threading will have two threads, one waiting for log while other counting timeout with sleep
 # Thus async make better sense with 1 thread doing up to three tasks
 # await is the yield point, isntead of waiting, do other await jobs
 
