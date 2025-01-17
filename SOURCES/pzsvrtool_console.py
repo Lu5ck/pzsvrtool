@@ -23,7 +23,7 @@ scrolling = False
 pad_pos = None
 pad_last_pos = None
 
-async def read_textbox(input_win, pad, scrnHeight):
+async def read_keys(pad: curses.window, input_win: curses.window, scrnHeight):
     global bRunning, pad_pos, pad_last_pos, scrolling
     temp, width = pad.getmaxyx()
     cursor_x = 0
@@ -44,11 +44,11 @@ async def read_textbox(input_win, pad, scrnHeight):
                         input_win.delch(0, cursor_x)
                 elif char == curses.KEY_UP:
                     scrolling = True
-                    pad_pos = max(0, pad_pos - (scrnHeight - 1) - 1)
+                    pad_pos = max(0, pad_pos - 1)
                     pad.noutrefresh(pad_pos, 0, 0, 0, curses.LINES - 2, width - 1)
                     input_win.refresh()
                 elif char == curses.KEY_DOWN:
-                    pad_pos = min(pad_last_pos, pad_pos + (scrnHeight - 1) + 1)
+                    pad_pos = min(pad_last_pos, pad_pos + 1)
                     if pad_pos == pad_last_pos:
                         scrolling = False
                     pad.noutrefresh(pad_pos, 0, 0, 0, curses.LINES - 2, width - 1)
@@ -87,10 +87,10 @@ async def read_textbox(input_win, pad, scrnHeight):
         except curses.error: # get_wch cause an error if empty
             await asyncio.sleep(0.1) # Important, otherwise it will block
 
-async def display_log(pad, input_win, tailfile):
+async def display_log(pad: curses.window, input_win: curses.window, tailfile):
     global max_lines, logProc, bRunning, pad_pos, pad_last_pos, scrolling
     height, width = pad.getmaxyx()
-    log_lines = []
+    log_lines_count = -1
     pad_pos = 0
     pad_last_pos = 0
     while bRunning:
@@ -113,48 +113,45 @@ async def display_log(pad, input_win, tailfile):
 
                 wrapped_lines = textwrap.wrap(line, width - 1, break_on_hyphens=False)
                 for wrapped_line in wrapped_lines:
-                    log_lines.append(wrapped_line)
+                    if wrapped_line.strip():
+                        if log_lines_count + 1 >= max_lines:
+                            pad.move(0, 0) # Move to first line of the pad
+                            pad.deleteln() # Delete the first line
+                            log_lines_count -= 1
+                        log_lines_count += 1
+                        pad.addstr(log_lines_count, 0, wrapped_line[:width - 1])
 
-                while len(log_lines) > max_lines:
-                    log_lines.pop(0)
-
-                pad.erase()
-                for i, log_line in enumerate(log_lines):
-                    pad.addstr(i, 0, log_line[:width - 1])
-
-                pad_last_pos = max(0, len(log_lines) - curses.LINES + 1)
+                pad_last_pos = max(0, log_lines_count - curses.LINES + 2)
                 if not scrolling:
                     pad_pos = pad_last_pos
 
-                # Refreshing with input_win after noutrefresh will place cursor at input_win
+                # Refreshing with input_win after noutrefresh will keep cursor at input_win
                 pad.noutrefresh(pad_pos, 0, 0, 0, curses.LINES - 2, width - 1) #
                 input_win.refresh()
                 
         except Exception as e:
             print(e)
-            pass
         finally:
             await logProc.wait()
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.1)
 
 async def main(stdscr):
     global bRunning, max_lines, logProc
     stdscr.clear()
     stdscr.refresh()
     height, width = stdscr.getmaxyx()
-    max_lines = height * 5
+    max_lines = 1000
     pad = curses.newpad(max_lines, width) # Pad is a huge windows that allow partial display. Useful for scrolling
     pad.scrollok(True) # For scrolling but I don't know if it really needed
     input_win = curses.newwin(1, width, height - 1, 0)
     input_win.keypad(True) # To recognize speical keys
 
     task_display_log = asyncio.create_task(display_log(pad, input_win, tailfile))
-    task_read_textbox = asyncio.create_task(read_textbox(input_win, pad, height))
+    task_read_keys = asyncio.create_task(read_keys(pad, input_win, height))
 
     try:
-        await asyncio.gather(task_read_textbox, task_display_log)
+        await asyncio.gather(task_read_keys, task_display_log)
     finally:
-        bRunning = False
         if logProc:
             logProc.terminate()
         curses.endwin()

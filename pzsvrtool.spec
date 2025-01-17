@@ -1,5 +1,5 @@
 Name:           pzsvrtool
-Version:        1.3.11
+Version:        1.4.11
 Release:        1%{?dist}
 Summary:        Scripts to manage Project Zomboid Server
 
@@ -50,7 +50,7 @@ install -m 0755 %{SOURCE9} %{buildroot}/usr/libexec/pzsvrtool
 
 %post
 # Note: glibc.i686 will install libgcc.i686, libgcc.i686 alone is not enough unlike Debian package
-echo "Manually install python3-bcrypt glibc.i686"
+echo "Manually install python3-bcrypt python3-aiohttp glibc.i686"
 
 %changelog
 * Wed Dec 25 2024 - 1.0.0
