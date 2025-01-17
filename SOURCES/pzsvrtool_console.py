@@ -24,7 +24,7 @@ pad_pos = None
 pad_last_pos = None
 
 async def read_keys(pad: curses.window, input_win: curses.window, scrnHeight):
-    global bRunning, pad_pos, pad_last_pos, scrolling
+    global bRunning, pad_pos, pad_last_pos, scrolling, logProc
     temp, width = pad.getmaxyx()
     cursor_x = 0
     input_text = ""
@@ -64,6 +64,14 @@ async def read_keys(pad: curses.window, input_win: curses.window, scrnHeight):
                         scrolling = False
                     pad.noutrefresh(pad_pos, 0, 0, 0, curses.LINES - 2, width - 1)
                     input_win.refresh()
+                elif char == curses.KEY_RESIZE:
+                    bRunning = False
+                    logProc.terminate()
+                    await logProc.wait()
+                    logProc = None
+                    curses.endwin()
+                    print("[pzsvrtool] Console does not support resizing")
+                    break
             elif isinstance(char, str):
                 if char == "\n": # Enter
                     if pzsvrtool_common.is_process_active("ProjectZomboid") and pzsvrtool_common.get_tmux_session():
@@ -100,7 +108,7 @@ async def display_log(pad: curses.window, input_win: curses.window, tailfile):
         stderr=subprocess.PIPE,
         close_fds=True)
         try:
-            while True:
+            while bRunning:
                 line = await logProc.stdout.readline()
                 if not line:
                     continue
@@ -132,7 +140,8 @@ async def display_log(pad: curses.window, input_win: curses.window, tailfile):
         except Exception as e:
             print(e)
         finally:
-            await logProc.wait()
+            if logProc:
+                await logProc.wait()
             await asyncio.sleep(0.1)
 
 async def main(stdscr):
