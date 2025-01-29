@@ -90,7 +90,7 @@ install_steam() {
     fi
 
     echo "[pzsvrtool] See https://steamdb.info/app/108600/depots/ for branches"
-    prompt_non_empty zomboidBranch "[pzsvrtool] Install what branch: " "Branch"
+    prompt_non_empty zomboidBranch "[pzsvrtool] Install what branch [e.g. public]: " "Branch"
 
     # Backup old files, if any
     if [[ -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json ]]; then
