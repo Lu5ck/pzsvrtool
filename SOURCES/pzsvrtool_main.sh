@@ -41,6 +41,10 @@ config_setup() {
         prompt_non_empty pzRootAdmin "Enter root admin name [Current=${pzRootAdmin}]: " "Root Admin Name"
     fi
 
+    if [[ -n ${pzRootAdminPassword} ]]; then
+        prompt_password pzRootAdminPassword "Enter root admin password: "
+    fi
+
     if [[ ! -d ~/${configFolder} ]]; then
         mkdir ~/${configFolder}
     fi
@@ -62,7 +66,9 @@ config_setup() {
     if [[ -n ${pzRootAdmin} ]]; then
         cfg_write ~/${configFolder}/${configFile} pzRootAdmin ${pzRootAdmin}
     fi
-
+    if [[ -n ${pzRootAdminPassword} ]]; then
+        cfg_write ~/${configFolder}/${configFile} pzRootAdminPassword ${pzRootAdminPassword}
+    fi
     # Confirm completion
     echo "[pzsvrtool] Configuration saved to ${HOME}/${configFolder}/${configFile}"
 }
@@ -160,18 +166,16 @@ start_server() {
         cfg_write ~/${configFolder}/${configFile} pzRootAdmin ${pzRootAdmin}
     fi
 
+    if [[ -z "${pzRootAdminPassword}" ]]; then
+        prompt_password pzRootAdminPassword "Enter root admin password: "
+        cfg_write ~/${configFolder}/${configFile} pzRootAdminPassword ${pzRootAdminPassword}
+    fi
+
     # Reset the flag
     cfg_write ~/${configFolder}/${varFile} "shutdown" "false"
 
-    # Check if root admin exist, if not, prompt password and run with its password
-    if [[ $(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT username FROM whitelist WHERE id = 1;") != "${pzRootAdmin}" ]]; then
-        prompt_password
-        tmux new-session -d -s "pzsvrtool_${zomboidServerName}" /usr/libexec/pzsvrtool/pzsvrtool_wrapper.sh ${pzRootAdmin} ${pzRootAdmin_password}
-    else
-        tmux new-session -d -s "pzsvrtool_${zomboidServerName}" /usr/libexec/pzsvrtool/pzsvrtool_wrapper.sh ${pzRootAdmin}
-    fi
+    tmux new-session -d -s "pzsvrtool_${zomboidServerName}" /usr/libexec/pzsvrtool/pzsvrtool_wrapper.sh
     
-
     echo "[pzsvrtool] start command executed"
 }
 

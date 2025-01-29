@@ -46,6 +46,7 @@ if [ -f ~/${configFolder}/${configFile} ]; then
 	backup=$(cfg_read ~/${configFolder}/${configFile} backup)
 	backupLimit=$(cfg_read ~/${configFolder}/${configFile} backupLimit)
 	pzRootAdmin=$(cfg_read ~/${configFolder}/${configFile} pzRootAdmin)
+	pzRootAdminPassword=$(cfg_read ~/${configFolder}/${configFile} pzRootAdminPassword)
 	discord_webhook_notice=$(cfg_read ~/${configFolder}/${configFile} discord_webhook_notice)
 fi
 
@@ -53,7 +54,7 @@ fi
 prompt_allow_empty_without_space_default() {
     local input
     while true; do
-        read -p "${2}" input
+        read -p "[pzsvrtool] ${2}" input
         if [[ "${input}" =~ [[:space:]] ]]; then
             echo "[pzsvrtool] ${3} cannot contain spaces. Please try again."
         else
@@ -69,7 +70,7 @@ prompt_allow_empty_without_space_default() {
 prompt_non_empty() {
     local input
     while true; do
-        read -p "${2}" input
+        read -p "[pzsvrtool] ${2}" input
         # Check if input is not empty and does not contain spaces
         if [[ -n "${input}" && ! "${input}" =~ [[:space:]] ]]; then
             eval "${1}=\"${input}\""
@@ -86,7 +87,7 @@ prompt_non_empty() {
 prompt_non_empty_boolean() {
 	local input
 	while true; do
-		read -p "${2}" input
+		read -p "[pzsvrtool] ${2}" input
 		case ${input} in
 			[Yy]* ) eval "${1}=true"; break;;
 			[Nn]* ) eval "${1}=false"; break;;
@@ -99,7 +100,7 @@ prompt_non_empty_boolean() {
 prompt_non_empty_numeric() {
 	local input
 	while true; do
-		read -p "${2}" input
+		read -p "[pzsvrtool] ${2}" input
 		if [[ -z "${input}" ]]; then
 			echo "[pzsvrtool] ${3} cannot be empty. Please try again."
 		elif [[ "${input}" =~ ^[0-9]+$ ]]; then
@@ -113,10 +114,9 @@ prompt_non_empty_numeric() {
 
 # This don't play nice with local variable thus don't call this with local variable as return
 prompt_password() {
-
 	while true; do
 		# Prompt for the first password
-		read -sp "[pzsvrtool] Enter your password: " password1
+		read -sp "[pzsvrtool] ${2}" password1
 		echo
 
         # Check if the password is empty or contains spaces
@@ -139,8 +139,7 @@ prompt_password() {
             echo "[pzsvrtool] Passwords do not match. Please try again."
         fi
     done
-	
-	pzRootAdmin_password="${password1}"
+	eval "${1}=\"${password1}\""
 }
 
 # Incase user modify the config file wrongly

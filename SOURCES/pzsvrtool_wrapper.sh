@@ -28,13 +28,7 @@ while true; do
 
     tmux new-session -d -s "pzsvrtool_$(id -u)_checkserverstarted" "python3 /usr/libexec/pzsvrtool/pzsvrtool_checkserverstarted.py"
 
-	if [[ "${1}" && "${2}" ]]; then
-		bash ~/${zomboidCoreServerFolderName}/start-server.sh -servername "${zomboidServerName}" -adminusername "${1}" -adminpassword "${2}"
-        # Get rid of $2 as we are done with this
-        shift
-    else
-        bash ~/${zomboidCoreServerFolderName}/start-server.sh -servername "${zomboidServerName}" -adminusername "${1}"
-	fi
+	bash ~/${zomboidCoreServerFolderName}/start-server.sh -servername "${zomboidServerName}" -adminusername "${pzRootAdmin}" -adminpassword "${pzRootAdminPassword}"
 
     send_discord_webhook "Server has shutdown"
     write_boot_log "Server has shutdown"
