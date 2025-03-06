@@ -265,7 +265,7 @@ restart_server() {
         fi
     fi
 
-    if [[ "$(is_shutdown_screen_active)" == "true" ]]; then If countdown already running
+    if [[ "$(is_shutdown_screen_active)" == "true" ]]; then # If countdown already running
         local temp=$(cfg_read ~/${configFolder}/${varFile} shutdown) # Read flag to see if restart or shutdown mode
         if [[ ${temp} == "false" ]]; then # Change mode accordingly
             if [[ ${1} ]]; then # Change time if any
