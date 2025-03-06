@@ -1,5 +1,5 @@
 Name:           pzsvrtool
-Version:        1.5.14
+Version:        1.5.15
 Release:        1%{?dist}
 Summary:        Scripts to manage Project Zomboid Server
 
@@ -16,7 +16,7 @@ Source7:        pzsvrtool_checkmodupdate.py
 Source8:        pzsvrtool_updateusrpw.py
 Source9:        pzsvrtool_checkserverstarted.py
 
-Requires:       bash, procps, findutils, coreutils, gawk, util-linux, tar, wget, lz4, python3, python3-psutil, epel-release, sqlite, tmux
+Requires:       bash, procps, findutils, coreutils, gawk, util-linux, tar, wget, lz4, python3, python3-psutil, sqlite, tmux
 
 %description
 Scripts to manage Project Zomboid Server.
@@ -50,7 +50,7 @@ install -m 0755 %{SOURCE9} %{buildroot}/usr/libexec/pzsvrtool
 
 %post
 # Note: glibc.i686 will install libgcc.i686, libgcc.i686 alone is not enough unlike Debian package
-echo "Manually install python3-bcrypt python3-aiohttp glibc.i686"
+echo "Manually install epel-release python3-bcrypt python3-aiohttp glibc.i686"
 
 %changelog
 * Wed Dec 25 2024 - 1.0.0

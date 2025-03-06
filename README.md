@@ -62,7 +62,7 @@ The scripts should provide all basics you need to run a linux PZ server.
 I pretty much made this for a community server of mine which is totally community funded. If it went dead then I don't see a point in maintaining the script as well.
 
 ## 💻 Installations
-For Fedora / RHEL / Rocky Linux / AlmaLinux, download RPM and run `sudo dnf install <rpm file name>` then run `sudo dnf install python3-bcrypt python3-aiohttp glibc.i686`, accept key if asked.
+For Fedora / RHEL / Rocky Linux / AlmaLinux, download RPM and run `sudo dnf install <rpm file name>` then run `sudo dnf install epel-release` (fedora doesn't need this) and finally `sudo dnf install python3-bcrypt python3-aiohttp glibc.i686`, accept key if asked.
 
 For Debian / Ubuntu, download DEB and place it in `/tmp` then run `sudo apt-get install /tmp/<deb file name>`.
 
