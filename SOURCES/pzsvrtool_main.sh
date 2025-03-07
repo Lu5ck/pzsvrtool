@@ -372,7 +372,7 @@ updateusrpw() {
         fi
     fi
     check_config
-    if [[ $(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT id FROM whitelist WHERE username = \"${1}\";") ]]; then
+    if [[ $(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT id FROM whitelist WHERE username = '${1}';") ]]; then
         python3 /usr/libexec/pzsvrtool/pzsvrtool_updateusrpw.py -username ${1} -password ${2}
         echo "[pzsvrtool] Password changed for ${1} "
     else
@@ -386,9 +386,9 @@ updateusrpw() {
 updateusrname() {
     check_config
 
-    if [[ $(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT id FROM whitelist WHERE username = \"${1}\";") ]]; then
-        local id=$(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT id FROM whitelist WHERE username = \"${1}\";")
-        sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "UPDATE whitelist SET username = \"${2}\" WHERE id = \"${id}\";"
+    if [[ $(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT id FROM whitelist WHERE username = '${1}';") ]]; then
+        local id=$(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT id FROM whitelist WHERE username = '${1}';")
+        sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "UPDATE whitelist SET username = '${2}' WHERE id = '${id}';"
         echo "[pzsvrtool] Username ${1} changed to ${2} "
     else
         echo "[pzsvrtool] ${1} not found"
