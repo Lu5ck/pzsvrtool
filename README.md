@@ -75,6 +75,7 @@ Commands list
 install <flags>                           Install or update steam and Project Zomboid
       -j or --json                        Backup and restore the previous ProjectZomboidXX.json
       -s or --startserver                 Backup and restore the previous startserver.sh
+      -l or --lib                 		Backup and update the game steamclient library using steamcmd
 start                                     Start the server
 restart <arg> <option>                    Restart the server
       -t or --time <minutes>              Custom countdown time in minutes
@@ -99,9 +100,9 @@ reconfig                                  Reconfigure settings
 ## 📂 Directories
 ```
 /<home>/Zomboid         Where your PZ saves, backup, server settings are at. pzsvrtool will save its compressed backups at the backup folder.
-/<home>/pzserver        PZ server software itself where you find ProjectZomboid64.json and start-server.sh
+/<home>/pzserver        PZ server software itself where you find ProjectZomboid64.json and start-server.sh and workshop mods
 /<home>/pzsvrtool       Where you can find pzsvrtool config and hidden var file, should you want to edit your backup limit or server names etc.
-/<home>/steam           SteamCMD folder where the mods are at
+/<home>/Steam           SteamCMD folder
 ```
 
 ## Check out my other useful guide!

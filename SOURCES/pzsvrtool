@@ -11,6 +11,7 @@ pzsvrtool_help() {
 	echo "install <flags>                           Install or update steam and Project Zomboid"
 	echo "      -j or --json                        Backup and restore the previous ProjectZomboidXX.json"
 	echo "      -s or --startserver                 Backup and restore the previous startserver.sh"
+	echo "      -l or --lib                 		Backup and update the game steamclient library using steamcmd"
 	echo "start                                     Start the server"
 	echo "restart <arg> <option>                    Restart the server"
 	echo "      -t or --time <minutes>              Custom countdown time in minutes"

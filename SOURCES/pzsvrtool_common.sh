@@ -457,10 +457,11 @@ parse_args_quit() {
 
 installJson=""
 installStartServer=""
+installSteamLib=""
 
 parse_args_install() {
     # Define the valid short and long flags
-    parsed_args=$(getopt -o js --long json,startserver -n "pzsvrtool" -- "${@}")
+    parsed_args=$(getopt -o jsl --long json,startserver,lib -n "pzsvrtool" -- "${@}")
     if [[ $? -ne 0 ]]; then
         exit 1
     fi
@@ -475,6 +476,10 @@ parse_args_install() {
                 ;;
             -s|--startserver)
                 installStartServer="true"
+                shift
+                ;;
+            -l|--lib)
+                installSteamLib="true"
                 shift
                 ;;
             --)
