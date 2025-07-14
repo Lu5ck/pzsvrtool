@@ -150,6 +150,16 @@ install_steam() {
         fi
     fi
 
+    # Update game's steamclient.so using steamcmd's if flag
+    if [[ -n ${installSteamLib} ]]; then
+        if [[ -f ~/${steamFolderName}/linux64/steamclient.so && -f ~/${zomboidCoreServerFolderName}/steamclient.so && -f ~/${zomboidCoreServerFolderName}/linux64/steamclient.so ]]; then
+            mv -f ~/${zomboidCoreServerFolderName}/steamclient.so ~/${zomboidCoreServerFolderName}/steamclient.so.original
+            mv -f ~/${zomboidCoreServerFolderName}/linux64/steamclient.so ~/${zomboidCoreServerFolderName}/linux64/steamclient.so.original
+            cp -f ~/${steamFolderName}/linux64/steamclient.so ~/${zomboidCoreServerFolderName}/steamclient.so
+            cp -f ~/${steamFolderName}/linux64/steamclient.so ~/${zomboidCoreServerFolderName}/linux64/steamclient.so
+        fi
+    fi
+    
     echo "[pzsvrtool] Installation Completed"
 }
 
