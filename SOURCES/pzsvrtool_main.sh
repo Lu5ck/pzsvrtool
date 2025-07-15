@@ -159,6 +159,12 @@ install_steam() {
             cp -f ~/${steamFolderName}/linux64/steamclient.so ~/${zomboidCoreServerFolderName}/linux64/steamclient.so
         fi
     fi
+
+    # PZ will throw an harmless error message if this empty "mods" directory doesn't exist
+    # Creating the directory to remove that error message on console
+    if [[ -d ~/${zomboidCoreServerFolderName} ]]; then
+        mkdir ~/${zomboidCoreServerFolderName}/mods
+    fi
     
     echo "[pzsvrtool] Installation Completed"
 }
