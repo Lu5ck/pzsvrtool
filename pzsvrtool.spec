@@ -1,5 +1,5 @@
 Name:           pzsvrtool
-Version:        1.6.16
+Version:        1.6.17
 Release:        1%{?dist}
 Summary:        Scripts to manage Project Zomboid Server
 

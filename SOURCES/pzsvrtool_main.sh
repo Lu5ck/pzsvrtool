@@ -38,11 +38,11 @@ config_setup() {
         prompt_allow_empty_without_space_default discord_webhook_notice "Enter discord notice webhook, empty if no change: " "Discord webhook URL"
     fi
     if [[ -n ${pzRootAdmin} ]]; then
-        prompt_non_empty pzRootAdmin "Enter root admin name [Current=${pzRootAdmin}]: " "Root Admin Name"
+        prompt_non_empty_adminUsername pzRootAdmin "Enter PZ root admin name [Current=${pzRootAdmin}]: " "PZ Root Admin Name"
     fi
 
     if [[ -n ${pzRootAdminPassword} ]]; then
-        prompt_password pzRootAdminPassword "Enter root admin password: "
+        prompt_password pzRootAdminPassword "Enter PZ root admin password: "
     fi
 
     if [[ ! -d ~/${configFolder} ]]; then
@@ -172,12 +172,12 @@ start_server() {
 
     # Project Zomboid always ask for an ingame root admin, we need to supply it
     if [[ -z "${pzRootAdmin}" ]]; then
-        prompt_non_empty pzRootAdmin "Enter root admin name: " "Root Admin Name"
+        prompt_non_empty_adminUsername pzRootAdmin "Enter PZ root admin name: " "PZ Root Admin Name"
         cfg_write ~/${configFolder}/${configFile} pzRootAdmin ${pzRootAdmin}
     fi
 
     if [[ -z "${pzRootAdminPassword}" ]]; then
-        prompt_password pzRootAdminPassword "Enter root admin password: "
+        prompt_password pzRootAdminPassword "Enter PZ root admin password: "
         cfg_write ~/${configFolder}/${configFile} pzRootAdminPassword ${pzRootAdminPassword}
     fi
 

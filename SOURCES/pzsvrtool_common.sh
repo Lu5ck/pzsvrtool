@@ -83,6 +83,25 @@ prompt_non_empty() {
     done
 }
 
+# Function to prompt and validate non-empty input for admin username
+prompt_non_empty_adminUsername() {
+    local input
+    while true; do
+        read -p "[pzsvrtool] ${2}" input
+        # Check if input is not empty and does not contain spaces
+        if [[ -n "${input}" && ! "${input}" =~ [[:space:]] && ! "${input,,}" =~ ^admin ]]; then
+            eval "${1}=\"${input}\""
+            break
+        elif [[ -z "${input}" ]]; then
+            echo "[pzsvrtool] ${3} cannot be empty. Please try again."
+		elif [[ ! "${input,,}" == ^admin ]]; then
+			echo "[pzsvrtool] ${3} cannot begin with 'admin'. Please try again."
+        else
+            echo "[pzsvrtool] ${3} cannot contain spaces. Please try again."
+        fi
+    done
+}
+
 # Function to prompt and validate numeric input
 prompt_non_empty_boolean() {
 	local input
