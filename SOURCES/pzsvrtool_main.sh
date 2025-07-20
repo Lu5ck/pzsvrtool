@@ -484,6 +484,7 @@ kill() {
     else
         # Since you killed it, I assume there's something wrong thus shutdown for good
         cfg_write ~/${configFolder}/${varFile} "shutdown" "true"
+        cfg_write ~/${configFolder}/${varFile} "safeShutdown" "false"
         pkill -9 -u "$(id -un)" -f "ProjectZomboid" # Kill all that match the name
         logger -p user.info "[pzsvrtool] User has killed Project Zomboid server processes"
         echo "[pzsvrtool] Kill command executed"
