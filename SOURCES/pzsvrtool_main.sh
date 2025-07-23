@@ -46,7 +46,7 @@ config_setup() {
     fi
 
     if [[ ! -d ~/${configFolder} ]]; then
-        mkdir ~/${configFolder}
+        mkdir -p ~/${configFolder}
     fi
 
     if [[ -f ~/${configFolder}/${configFile} ]]; then
@@ -163,7 +163,7 @@ install_steam() {
     # PZ will throw an harmless error message if this empty "mods" directory doesn't exist
     # Creating the directory to remove that error message on console
     if [[ -d ~/${zomboidCoreServerFolderName} ]]; then
-        mkdir ~/${zomboidCoreServerFolderName}/mods
+        mkdir -p ~/${zomboidCoreServerFolderName}/mods
     fi
     
     echo "[pzsvrtool] Installation Completed"
