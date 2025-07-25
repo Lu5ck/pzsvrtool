@@ -119,6 +119,19 @@ install_steam() {
 
     bash ~/${steamFolderName}/steamcmd.sh +force_install_dir ~/${zomboidCoreServerFolderName}/ +login anonymous +app_update 380870 ${zomboidBranch} validate +quit
 
+    # Move back old files if it doesn't exist, not all patch override these files
+    if [[ ! -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json ]]; then
+        mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.old ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json
+    fi
+
+    if [[ ! -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json ]]; then
+        mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.old ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json
+    fi
+
+    if [[ ! -f ~/${zomboidCoreServerFolderName}/start-server.sh ]]; then
+        mv -f ~/${zomboidCoreServerFolderName}/start-server.sh.old ~/${zomboidCoreServerFolderName}/start-server.sh
+    fi   
+
     # Restore json if flag
     if [[ -n ${installJson} ]]; then
         if [[ -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json && -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.old ]]; then
