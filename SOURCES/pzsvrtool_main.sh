@@ -114,7 +114,7 @@ install_steam() {
     # Check for steamcmd before downloading again
     if [[ ! -f ~/${steamFolderName}/steamcmd.sh ]]; then
         echo "[pzsvrtool] Downloading & Extracting SteamCMD"
-        wget -q ${steamCmdUrl} && mkdir ~/${steamFolderName} && tar -xzf steamcmd_linux.tar.gz -C ${steamFolderName} && rm -f steamcmd_linux.tar.gz
+        wget -q ${steamCmdUrl} && mkdir -p ~/${steamFolderName} && tar -xzf steamcmd_linux.tar.gz -C ~/${steamFolderName} && rm -f steamcmd_linux.tar.gz
     fi
 
     bash ~/${steamFolderName}/steamcmd.sh +force_install_dir ~/${zomboidCoreServerFolderName}/ +login anonymous +app_update 380870 ${zomboidBranch} validate +quit
