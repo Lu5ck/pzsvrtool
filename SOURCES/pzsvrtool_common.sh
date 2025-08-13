@@ -235,6 +235,13 @@ exit_if_no_pz() {
 	fi
 }
 
+exit_if_pz_not_installed() {
+	if [[ ! -f ~/${zomboidCoreServerFolderName}/start-server.sh ]]; then
+		echo "[pzsvrtool] PZ not installed, run pzsvrtool install"
+		exit
+	fi
+}
+
 exit_if_has_pzscreen() {
 	if tmux has-session -t "pzsvrtool_${zomboidServerName}" 2>/dev/null; then
 		# Return 0 or blank if has screen

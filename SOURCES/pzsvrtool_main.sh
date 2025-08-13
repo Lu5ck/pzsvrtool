@@ -188,6 +188,7 @@ start_server() {
     check_config
     exit_if_has_pz
     exit_if_has_pzscreen
+    exit_if_pz_not_installed
 
     # Project Zomboid always ask for an ingame root admin, we need to supply it
     if [[ -z "${pzRootAdmin}" ]]; then
