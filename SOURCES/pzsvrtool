@@ -74,8 +74,8 @@ case "${1}" in
 		;;
 
 	updateusrpw)
-		if [[ "${@:3}" =~ ^[a-zA-Z0-9]+$ ]]; then
-			exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh updateusrpw ${2} ${3}
+		if [[ "${3}" =~ ^[a-zA-Z0-9]+$ ]]; then
+			exec /usr/libexec/pzsvrtool/pzsvrtool_main.sh updateusrpw "${2}" "${3}"
 		else
 			echo "[pzsvrtool] Invalid password, only allow alphanumeric with no space"
 		fi

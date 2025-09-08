@@ -403,7 +403,7 @@ updateusrpw() {
     fi
     check_config
     if [[ $(sql_query ~/"${zomboidServerFolderName}/db/${zomboidServerName}.db" "SELECT id FROM whitelist WHERE username = '${1}';") ]]; then
-        python3 /usr/libexec/pzsvrtool/pzsvrtool_updateusrpw.py -username ${1} -password ${2}
+        python3 /usr/libexec/pzsvrtool/pzsvrtool_updateusrpw.py -username "${1}" -password "${2}"
         echo "[pzsvrtool] Password changed for ${1} "
     else
         echo "[pzsvrtool] ${1} not found"
