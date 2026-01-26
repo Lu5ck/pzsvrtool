@@ -95,8 +95,9 @@ install_steam() {
         parse_args_install "${@}"
     fi
 
-    echo "[pzsvrtool] See https://steamdb.info/app/108600/depots/ for branches"
-    prompt_non_empty zomboidBranch "[pzsvrtool] Install what branch [e.g. public]: " "Branch"
+    echo "[pzsvrtool] See https://steamdb.info/app/108600/depots/ for beta branches"
+    prompt_allow_empty_without_space_default zomboidBranch "Specify beta branch, empty if stable: " "Beta Branch"
+    echo ${zomboidBranch}
 
     # Backup old files, if any
     if [[ -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json ]]; then
@@ -117,7 +118,11 @@ install_steam() {
         wget -q ${steamCmdUrl} && mkdir -p ~/${steamFolderName} && tar -xzf steamcmd_linux.tar.gz -C ~/${steamFolderName} && rm -f steamcmd_linux.tar.gz
     fi
 
-    bash ~/${steamFolderName}/steamcmd.sh +force_install_dir ~/${zomboidCoreServerFolderName}/ +login anonymous +app_update 380870 ${zomboidBranch} validate +quit
+    if [[ -z ${zomboidBranch} ]]; then
+        bash ~/${steamFolderName}/steamcmd.sh +force_install_dir ~/${zomboidCoreServerFolderName}/ +login anonymous +app_update 380870 validate +quit
+    else
+        bash ~/${steamFolderName}/steamcmd.sh +force_install_dir ~/${zomboidCoreServerFolderName}/ +login anonymous +app_update 380870 -beta ${zomboidBranch} validate +quit
+    fi
 
     # Move back old files if it doesn't exist, not all patch override these files
     if [[ ! -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json ]]; then
