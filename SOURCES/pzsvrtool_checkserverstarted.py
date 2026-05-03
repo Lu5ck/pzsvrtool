@@ -16,6 +16,13 @@ import pzsvrtool_common
 
 # Global variables
 bRunning = True
+server_started_re = re.compile(
+    r"LOG\s+:\s+Network\s+(?:"
+    r"[\d,]+>\s+\d+>"
+    r"|"
+    r"f:\d+\s+st:[\d,]+>"
+    r")\s+\*{3,4}\s+SERVER STARTED\s+\*{3,4}"
+)
 
 async def read_log(proc):
     global bRunning
@@ -25,7 +32,7 @@ async def read_log(proc):
             line = line.decode("utf-8").strip() # Convert binary to text
 
             # Find matching lines
-            if re.match(r"LOG\s+:\s+Network\s+,\s+\d+>\s+\d{1,3}(?:,\d{3})*>.+?\*\*\*\s+SERVER STARTED\s+\*\*\*", line):
+            if server_started_re.match(line):
                 await pzsvrtool_common.send_discord_webhook("Server started")
                 pzsvrtool_common.write_log("Server started")
                 bRunning = False
