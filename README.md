@@ -1,12 +1,13 @@
 ## 🧰️ pzsvrtool
 Did you...
-- thought that running a docker on that expensive VPS is so wasting on your already limited paid resources?
-- suddenly thought of doing a shutdown on the current restart countdown so you can apply some quick changes?
-- saw those huge backup zip files, thinking it did be nice to be smaller so you can have more on your already limited resources?
+- Thought that running a docker on that expensive VPS is so wasting on your already limited paid resources?
+- Suddenly thought of doing a shutdown on the current restart countdown so you can apply some quick changes?
+- Saw those huge backup zip files, thinking it did be nice to be smaller so you can have more on your already limited resources?
 - Tried VPS with virtualization securities that prohibit you from using some PZ tools because it uses some fancy ways to detach and attach PZ?
-- get annoyed that some PZ tools doesn't restart because it couldn't detect unlisted mods updates, mods that you don't want others to use?
-- get annoyed that your scheduled restart occur right after a mod update restart?
-- hate it that when you try to update Zomboid but some PZ tools don't help you backup nor restore the previous modified `.json` or `start-server.sh`?
+- Get annoyed that some PZ tools doesn't restart because it couldn't detect unlisted mods updates, mods that you don't want others to use?
+- Get annoyed that your scheduled restart occur right after a mod update restart?
+- Hate it that when you try to update Zomboid but some PZ tools don't help you backup nor restore the previous modified `.json` or `start-server.sh`?
+- Hate your VPS provider rebooting your VPS without informing you?
 
 Well, I do and I waited but these tools never get updated so I made my own, much easier and cleaner. All in all, pzsvrtool is made by server owner for server owners.
 
@@ -56,17 +57,24 @@ The scripts should provide all basics you need to run a linux PZ server.
 - Reset zombie population
 - Auto backup start-server-sh and ProjectZomboidXX.json when updating PZ with option to auto revert them
 - Supports discord webhook to be informed of bootup, shutdown, backup, restart, bootloop and checkmodsneedupdate status
+- Graceful shutdown for unplanned reboot or shutdown, by running PZ as system service
 
 ## ❤️ Support the work
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y8CX2QA) <br>
 I pretty much made this for a community server of mine which is totally community funded. If it went dead then I don't see a point in maintaining the script as well.
 
 ## 💻 Installations
-For Fedora / RHEL / Rocky Linux / AlmaLinux, download RPM and run `sudo dnf install <rpm file name>` then run `sudo dnf install epel-release` (fedora doesn't need this) and finally `sudo dnf install python3-bcrypt python3-aiohttp glibc.i686`, accept key if asked.
+For Fedora / RHEL / Rocky Linux / AlmaLinux, download the RPM, run `sudo dnf install epel-release glibc.i686`, accept key if asked. Finally run `sudo dnf install <rpm file name>`.
 
 For Debian / Ubuntu, download DEB and place it in `/tmp` then run `sudo apt-get install /tmp/<deb file name>`.
 
 You are not allowed to run this as root so do `sudo useradd --create-home --shell /bin/bash <username>` and `sudo passwd <username>` to set password. Do `sudo -i -u <username>` to quick switch from root to target user. In the new user account, do `pzsvrtool install` to install then `pzsvrtool start` to launch your server.
+
+For the graceful unplanned shutdown of systemd unit file to work properly, you will have do this with root `systemctl edit user@$(id -u <username>).service` and add this
+```
+[Service]
+TimeoutStopSec=20m
+```
 
 ## 📄 Commands
 ```

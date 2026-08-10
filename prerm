@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+check_tmux_sessions() {
+    found_session=""
+    for sockdir in /tmp/tmux-*; do
+        [ -d "$sockdir" ] || continue
+        owner=$(stat -c '%U' "$sockdir" 2>/dev/null) || continue
+        [ -n "$owner" ] || continue
+
+        for sock in "$sockdir"/*; do
+            [ -S "$sock" ] || continue
+            sessions=$(runuser -u "$owner" -- tmux -S "$sock" list-sessions -F '#{session_name}' 2>/dev/null || true)
+            match=$(echo "$sessions" | grep '^pzsvrtool_' || true)
+            if [ -n "$match" ]; then
+                found_session="yes"
+                return
+            fi
+        done
+    done
+}
+
+case "$1" in
+    remove)
+        check_tmux_sessions
+        if [ -n "$found_session" ]; then
+            echo "Error: A pzsvrtool-managed server (tmux session) is currently running." >&2
+            echo "Stop the server before uninstalling pzsvrtool." >&2
+            exit 1
+        fi
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

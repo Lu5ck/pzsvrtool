@@ -303,6 +303,13 @@ exit_if_no_common_python_module() {
     fi
 }
 
+exit_if_service_running() {
+	if systemctl --user is-active --quiet pzsvrtool@${zomboidServerName}.service; then
+		echo "[pzsvrtool] service still running"
+		exit
+	fi
+}
+
 # Not tested, don't use
 get_pzScreenID() {
 	tmux list-sessions -F "#{session_name}" | while read -r session; do

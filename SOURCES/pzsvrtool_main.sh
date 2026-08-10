@@ -197,6 +197,7 @@ start_server() {
     exit_if_has_pz
     exit_if_has_pzscreen
     exit_if_pz_not_installed
+    exit_if_service_running
 
     # Project Zomboid always ask for an ingame root admin, we need to supply it
     if [[ -z "${pzRootAdmin}" ]]; then
@@ -212,8 +213,10 @@ start_server() {
     # Reset the flag
     cfg_write ~/${configFolder}/${varFile} "shutdown" "false"
 
-    tmux new-session -d -s "pzsvrtool_${zomboidServerName}" /usr/libexec/pzsvrtool/pzsvrtool_wrapper.sh
-    
+    export XDG_RUNTIME_DIR=/run/user/$(id -u)
+    systemctl --user daemon-reload
+    systemctl --user start "pzsvrtool@${zomboidServerName}.service"
+
     echo "[pzsvrtool] start command executed"
 }
 

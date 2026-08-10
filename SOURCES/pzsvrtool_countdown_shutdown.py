@@ -22,6 +22,7 @@ isFirstAnnouncement = True
 isOperatorChangedAnnounced = False
 isGraced = False
 tailProc = None
+isNoInput = False
 
 async def announcement():
     global seconds
@@ -166,15 +167,20 @@ async def command_listener():
             continue
 
 async def main():
-    global seconds
+    global seconds, isNoInput
 
     # Library to parse arguments
     parser = argparse.ArgumentParser(description="Countdown Shutdown", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-minutes", help="How many minutes?", required=True)
+    parser.add_argument("-noinput", help="Disable operator changing the countdown time", action="store_true")
     args = parser.parse_args()
     seconds = int(args.minutes) * 60
+    isNoInput = args.noinput
 
-    await asyncio.gather(countdown_timer(), command_listener())
+    if isNoInput:
+        await countdown_timer()
+    else:
+        await asyncio.gather(countdown_timer(), command_listener())
 
 
 if __name__ == "__main__":
