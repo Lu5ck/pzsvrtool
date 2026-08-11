@@ -125,17 +125,17 @@ install_steam() {
     fi
 
     # Move back old files if it doesn't exist, not all patch override these files
-    if [[ ! -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json ]]; then
+    if [[ ! -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json && -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.old ]]; then
         mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json.old ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json
         chmod 755 ~/${zomboidCoreServerFolderName}/ProjectZomboid64.json
     fi
 
-    if [[ ! -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json ]]; then
+    if [[ ! -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json && -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.old ]]; then
         mv -f ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json.old ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json
         chmod 755 ~/${zomboidCoreServerFolderName}/ProjectZomboid32.json
     fi
 
-    if [[ ! -f ~/${zomboidCoreServerFolderName}/start-server.sh ]]; then
+    if [[ ! -f ~/${zomboidCoreServerFolderName}/start-server.sh && -f ~/${zomboidCoreServerFolderName}/start-server.sh.old ]]; then
         mv -f ~/${zomboidCoreServerFolderName}/start-server.sh.old ~/${zomboidCoreServerFolderName}/start-server.sh
         chmod 755 ~/${zomboidCoreServerFolderName}/start-server.sh
     fi   
