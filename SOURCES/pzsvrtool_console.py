@@ -163,7 +163,6 @@ async def main(stdscr):
     finally:
         if logProc:
             logProc.terminate()
-        curses.endwin()
 
 if __name__ == "__main__":
     try:
