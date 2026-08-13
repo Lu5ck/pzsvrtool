@@ -214,7 +214,8 @@ start_server() {
     cfg_write ~/${configFolder}/${varFile} "shutdown" "false"
 
     export XDG_RUNTIME_DIR=/run/user/$(id -u)
-    systemctl --user daemon-reload
+    sleep 0.5
+    systemctl --user daemon-reload > /dev/null 2>&1
     systemctl --user start "pzsvrtool@${zomboidServerName}.service"
 
     echo "[pzsvrtool] start command executed"
@@ -244,7 +245,7 @@ quit_server() {
         if [[ ${temp} == "false" ]]; then # Change mode accordingly
             cfg_write ~/${configFolder}/${varFile} "shutdown" "true"
             if [[ ${1} ]]; then # Change time if any
-                tmux send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
+                tmux -L pzsvrtool send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
                 echo "[pzsvrtool] There's already an restart task, changing to shutdown mode"
                 echo "[pzsvrtool] Countdown modified to ${customMinutes} minutes"
             else
@@ -252,7 +253,7 @@ quit_server() {
             fi
         else
             if [[ ${1} ]]; then # Change time if any
-                tmux send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
+                tmux -L pzsvrtool send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
                 echo "[pzsvrtool] Countdown modified to ${customMinutes} minutes"
             else
                 echo "[pzsvrtool] There's already an shutdown task"
@@ -263,10 +264,10 @@ quit_server() {
 
     cfg_write ~/${configFolder}/${varFile} "shutdown" "true" # We shutting down thus indicate the flag
     if [[ -z ${1} ]]; then # If we have custom timing
-        tmux new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${countdownTime}"
+        tmux -L pzsvrtool new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${countdownTime}"
         echo "[pzsvrtool] quit command executed. Server shutting down in ${countdownTime} minutes"
     else
-        tmux new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${customMinutes}"
+        tmux -L pzsvrtool new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${customMinutes}"
         echo "[pzsvrtool] quit command executed. Server shutting down in ${customMinutes} minutes"
     fi
 }
@@ -310,7 +311,7 @@ restart_server() {
         local temp=$(cfg_read ~/${configFolder}/${varFile} shutdown) # Read flag to see if restart or shutdown mode
         if [[ ${temp} == "false" ]]; then # Change mode accordingly
             if [[ ${1} ]]; then # Change time if any
-                tmux send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
+                tmux -L pzsvrtool send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
                 echo "[pzsvrtool] Countdown modified to ${customMinutes} minutes"
             else
                 echo "[pzsvrtool] There's already an restart task"
@@ -318,7 +319,7 @@ restart_server() {
         else
             cfg_write ~/${configFolder}/${varFile} "shutdown" "false"
             if [[ ${1} ]]; then # Change time if any
-                tmux send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
+                tmux -L pzsvrtool send-keys -t "pzsvrtool_$(id -u)_shutdown" "updatetime ${customMinutes}" C-m
                 echo "[pzsvrtool] There's already an shutdown task, changing to restart mode"
                 echo "[pzsvrtool] Countdown modified to ${customMinutes} minutes"
             else
@@ -329,10 +330,10 @@ restart_server() {
     fi
 
     if [[ -z ${customMinutes} ]]; then # If we have custom timing
-        tmux new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${countdownTime}"
+        tmux -L pzsvrtool new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${countdownTime}"
         echo "[pzsvrtool] restart command executed. Server restarting in ${countdownTime} minutes."
     else
-        tmux new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${customMinutes}"
+        tmux -L pzsvrtool new-session -d -s "pzsvrtool_$(id -u)_shutdown" "python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes ${customMinutes}"
         echo "[pzsvrtool] restart command executed. Server restarting in ${customMinutes} minutes."
     fi
 }
@@ -349,7 +350,7 @@ cancel_shutdown() {
     fi
 
     cfg_write ~/${configFolder}/${varFile} "shutdown" "false"
-    tmux send-keys -t "pzsvrtool_$(id -u)_shutdown" "stop" C-m
+    tmux -L pzsvrtool send-keys -t "pzsvrtool_$(id -u)_shutdown" "stop" C-m
 
     echo "[pzsvrtool] cancel command executed"
 }
@@ -467,7 +468,7 @@ send_message() {
     exit_if_no_pz
     exit_if_no_pzscreen
 
-    tmux send-keys -t "pzsvrtool_${zomboidServerName}" "servermsg \"$*\"" C-m
+    tmux -L pzsvrtool send-keys -t "pzsvrtool_${zomboidServerName}" "servermsg \"$*\"" C-m
 }
 
 # Useful for scheduled tasks
@@ -477,7 +478,7 @@ send_command() {
     exit_if_no_pz
     exit_if_no_pzscreen
 
-    tmux send-keys -t "pzsvrtool_${zomboidServerName}" "$*" C-m
+    tmux -L pzsvrtool send-keys -t "pzsvrtool_${zomboidServerName}" "$*" C-m
 }
 
 # Yes, you can reset zpop even if server running, I did it many times

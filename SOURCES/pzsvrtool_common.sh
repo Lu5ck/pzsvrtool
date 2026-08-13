@@ -243,7 +243,7 @@ exit_if_pz_not_installed() {
 }
 
 exit_if_has_pzscreen() {
-	if tmux has-session -t "pzsvrtool_${zomboidServerName}" 2>/dev/null; then
+	if tmux -L pzsvrtool has-session -t "pzsvrtool_${zomboidServerName}" 2>/dev/null; then
 		# Return 0 or blank if has screen
 		echo "[pzsvrtool] PZ screen found, check if backup is running, cannot execute command"
 		exit
@@ -253,7 +253,7 @@ exit_if_has_pzscreen() {
 }
 
 exit_if_no_pzscreen() {
-	if tmux has-session -t "pzsvrtool_${zomboidServerName}" 2>/dev/null; then
+	if tmux -L pzsvrtool has-session -t "pzsvrtool_${zomboidServerName}" 2>/dev/null; then
 		# Return 0 or blank if has screen
 		:
 	else
@@ -312,9 +312,9 @@ exit_if_service_running() {
 
 # Not tested, don't use
 get_pzScreenID() {
-	tmux list-sessions -F "#{session_name}" | while read -r session; do
-		tmux list-panes -t "${session}" -F "#{pane_index}" | while read -r pane; do
-			ouput=$(tmux capture-pane -t "${session}.${pane}" -p -S -100)
+	tmux -L pzsvrtool list-sessions -F "#{session_name}" | while read -r session; do
+		tmux -L pzsvrtool list-panes -t "${session}" -F "#{pane_index}" | while read -r pane; do
+			ouput=$(tmux -L pzsvrtool capture-pane -t "${session}.${pane}" -p -S -100)
 			if echo "${output}" | grep -q "pzsvrtool_wrapper"; then
 				echo ${session}
 			fi
@@ -323,7 +323,7 @@ get_pzScreenID() {
 }
 
 is_shutdown_screen_active() {
-	if tmux has-session -t "pzsvrtool_$(id -u)_shutdown" 2>/dev/null; then
+	if tmux -L pzsvrtool has-session -t "pzsvrtool_$(id -u)_shutdown" 2>/dev/null; then
 		echo "true"
 	else
 		echo "false"

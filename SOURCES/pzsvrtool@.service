@@ -8,7 +8,7 @@ Before=halt.target reboot.target shutdown.target
 [Service]
 Type=forking
 RemainAfterExit=no
-ExecStart=/usr/bin/tmux new-session -d -s pzsvrtool_%i /usr/libexec/pzsvrtool/pzsvrtool_wrapper.sh
+ExecStart=/usr/bin/tmux -L pzsvrtool new-session -d -s pzsvrtool_%i /usr/libexec/pzsvrtool/pzsvrtool_wrapper.sh
 ExecStop=/usr/libexec/pzsvrtool/pzsvrtool_gracefulstop.sh
 TimeoutAbortSec=20m
 

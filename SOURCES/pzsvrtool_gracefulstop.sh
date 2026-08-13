@@ -8,7 +8,7 @@ check_config
 exit_if_no_pz
 exit_if_no_pzscreen
 
-tmux send-keys -t "pzsvrtool_${zomboidServerName}" "servermsg \"Unplanned shutdown\"" C-m
+tmux -L pzsvrtool send-keys -t "pzsvrtool_${zomboidServerName}" "servermsg \"Unplanned shutdown\"" C-m
 send_discord_webhook "Unplanned shutdown"
 cfg_write ~/${configFolder}/${varFile} "shutdown" "true"
 python3 /usr/libexec/pzsvrtool/pzsvrtool_countdown_shutdown.py -minutes 3 -noinput
@@ -24,7 +24,7 @@ while [[ "$(get_pzInstance)" != "false" ]]; do
 done
 
 elapsed=0
-while tmux has-session -t "pzsvrtool_${zomboidServerName}" 2>/dev/null; do
+while tmux -L pzsvrtool has-session -t "pzsvrtool_${zomboidServerName}" 2>/dev/null; do
     sleep 1
     elapsed=$((elapsed + 1))
 done

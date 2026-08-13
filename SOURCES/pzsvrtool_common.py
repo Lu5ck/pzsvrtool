@@ -34,7 +34,7 @@ async def is_process_active_async(process_name):
 
 def send_keys_to_tmux_session(session_name, command_text):
     try:
-        command = ["tmux", "send-keys", "-t", session_name, command_text, "C-m"]
+        command = ["tmux", "-L", "pzsvrtool", "send-keys", "-t", session_name, command_text, "C-m"]
         subprocess.run(command, check=True)
     except:
         pass
@@ -43,7 +43,7 @@ def get_tmux_session():
     try:
         # List all tmux sessions
         result = subprocess.run(
-            ["tmux", "list-sessions", "-F", "#S"],
+            ["tmux", "-L", "pzsvrtool", "list-sessions", "-F", "#S"],
             stdout=subprocess.PIPE,
             text=True,
             check=True
