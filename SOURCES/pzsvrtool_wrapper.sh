@@ -11,6 +11,13 @@ fi
 
 source /usr/libexec/pzsvrtool/pzsvrtool_common.sh
 
+check_config
+exit_if_no_common_python_module
+exit_if_pz_not_installed
+exit_if_has_pz
+
+cfg_write ~/${configFolder}/${varFile} "shutdown" "false"
+
 pzsvrtool_wrapper_startTime=$(date +%s)
 pzsvrtool_wrapper_retry=0
 while true; do
