@@ -46,7 +46,7 @@ while true; do
     # A broken start_server.sh or ProjectZomboidxx.json or mod can cause bootloop
     # We also don't want it to keep backing up the same thing which will override the older backup due to backup limits
     if [[ $(($(date +%s)-${pzsvrtool_wrapper_startTime})) -ge 120 ]]; then
-        if [[ ${backup}=="true" ]]; then
+        if [[ "${backup}" == "true" ]]; then
             if [[ $(cfg_read ~/${configFolder}/${varFile} safeShutdown) == "true" ]]; then
                 send_discord_webhook "Safe shutdown detected, backing up"
                 write_boot_log "Safe shutdown detected, backing up"
