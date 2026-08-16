@@ -1,18 +1,29 @@
-## 🧰️ pzsvrtool
-Did you...
-- Thought that running a docker on that expensive VPS is so wasting on your already limited paid resources?
-- Suddenly thought of doing a shutdown on the current restart countdown so you can apply some quick changes?
-- Saw those huge backup zip files, thinking it did be nice to be smaller so you can have more on your already limited resources?
-- Tried VPS with virtualization securities that prohibit you from using some PZ tools because it uses some fancy ways to detach and attach PZ?
-- Get annoyed that some PZ tools doesn't restart because it couldn't detect unlisted mods updates, mods that you don't want others to use?
-- Get annoyed that your scheduled restart occur right after a mod update restart?
-- Hate it that when you try to update Zomboid but some PZ tools don't help you backup nor restore the previous modified `.json` or `start-server.sh`?
-- Hate your VPS provider rebooting your VPS without informing you?
+<div align="center">
 
-Well, I do and I waited but these tools never get updated so I made my own, much easier and cleaner. All in all, pzsvrtool is made by server owner for server owners.
+# 🧰️ pzsvrtool
+
+An lightweight terminal toolchain for running Project Zomboid on Linux Server
+</div>
+
+**Why pzsvrtool?**<br>Many PZ server tools uses docker, need rcons or simply don't survive a VPS reboot cleanly. pzsvrtool is built by a server owner, for server owners: no container, small backups and lightweight.
+
+## ✅ Features
+- Detects unlisted mod updates
+- Stays running unless explicitly shut down
+- Compressed backups up to 10x smaller than PZ's own zip
+- Bootloop detection — avoids burning through backup slots on crash loops
+- Real console experience: scrollable with Page Up/Down and arrow keys
+- Restart/shutdown countdowns, with skip-if-recent-backup logic for cron
+- Kicks players before restart/shutdown - PZ only saves when cells unload
+- Guards against multiple PZ instances running at once
+- Auto-backs up start-server.sh and ProjectZomboidXX.json on update, with revert option
+- Discord webhook alerts: boot, shutdown, backup, restart, bootloop, mod update check status
+- Graceful shutdown on unplanned reboot or shutdown (runs PZ as a systemd service)
+- User password reset, zombie population reset, and more
+
 
 ## 🐧 Supported Platforms
-Tested on Almalinux 9.5. Theorically the scripts should work in all linux enviroments as long the followings are met<details>
+Tested on Almalinux 9.8. Theorically the scripts should work in all linux enviroments as long the followings are met<details>
 <summary>Dependencies</summary>
 Should come installed with linux but just incase
 
@@ -37,44 +48,42 @@ Need to install
 
 </details>
 
-## 🧐 General usage
-The scripts should provide all basics you need to run a linux PZ server.
-- If you need to do scheduled restart, you can add `pzsvrtool restart --backupgrace 120` to crontab schedule
-- If you want to periodically check mod updates, you can add `pzsvrtool checkmodupdate` to crontab schedule
-
-## ✅ Features
-- Able to detect unlisted mod update
-- Always running unless explicitly shutdown
-- Compresed backup with up to 10x smaller than PZ zip, highly recommended to disable PZ backup
-- Bootloop detection to prevent unnecessary compressed backups thus data losses due to backup limits
-- Console that looks like the real deal while able to scroll with page up, page down, arrow up and arrow down
-- Countdown for restart and shutdown
-- Unnecessary scheduled restart prevention option
-- Reliable linux utilities used to run PZ in background
-- Kick players before restart or shutdown to minimize data loss from PZ poor saving mechanic
-- Numerous checks to prevent multiple PZ instances
-- Change user password
-- Reset zombie population
-- Auto backup start-server-sh and ProjectZomboidXX.json when updating PZ with option to auto revert them
-- Supports discord webhook to be informed of bootup, shutdown, backup, restart, bootloop and checkmodsneedupdate status
-- Graceful shutdown for unplanned reboot or shutdown, by running PZ as system service
-
-## ❤️ Support the work
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y8CX2QA) <br>
-I pretty much made this for a community server of mine which is totally community funded. If it went dead then I don't see a point in maintaining the script as well.
-
 ## 💻 Installations
-For Fedora / RHEL / Rocky Linux / AlmaLinux, download the RPM, run `sudo dnf install epel-release glibc.i686`, accept key if asked. Finally run `sudo dnf install <rpm file name>`.
+**Fedora / RHEL / Rocky / AlmaLinux**
+```bash
+sudo dnf install epel-release glibc.i686
+sudo dnf install <rpm file name>
+```
 
-For Debian / Ubuntu, download DEB and place it in `/tmp` then run `sudo apt-get install /tmp/<deb file name>`.
+**Debian / Ubuntu**
+```bash
+sudo apt-get install /tmp/<deb file name>
+```
 
-You are not allowed to run this as root so do `sudo useradd --create-home --shell /bin/bash <username>` and `sudo passwd <username>` to set password. Do `sudo -i -u <username>` to quick switch from root to target user. In the new user account, do `pzsvrtool install` to install then `pzsvrtool start` to launch your server.
+pzsvrtool won't run as root. Create a user first:
+```bash
+sudo useradd --create-home --shell /bin/bash <username>
+sudo passwd <username>
+sudo -i -u <username>
+```
 
-For the graceful unplanned shutdown of systemd unit file to work properly, you will have do this with root `systemctl edit user@$(id -u <username>).service` and add this
+Then, as that user:
+```bash
+pzsvrtool install
+pzsvrtool start
+```
+
+Graceful shutdown on host reboot. As root, run <br>`systemctl edit user@$(id -u <username>).service` and add:
 ```
 [Service]
 TimeoutStopSec=20m
 ```
+
+## 🧐 General usage
+The scripts should provide all basics you need to run a linux PZ server.
+- If you need to do scheduled restart, you can add `* /12 * * *     pzsvrtool restart --backupgrace 120` to crontab schedule
+- If you want to periodically check mod updates, you can add `*/10 * * * *    pzsvrtool checkmodupdate` to crontab schedule
+- If you want to automatically start server after reboot, you can add `@reboot      sleep 60 && pzsvrtool start` to crontab schedule
 
 ## 📄 Commands
 ```
@@ -117,3 +126,7 @@ reconfig                                  Reconfigure settings
 [Project Zomboid Steam Guide > Linux Server: Java, Garbage Collector and Memory](https://steamcommunity.com/sharedfiles/filedetails/?id=3130670064)
 
 [Project Zomboid Steam Guide > Linux Server: Firewall](https://steamcommunity.com/sharedfiles/filedetails/?id=3130996558)
+
+## ❤️ Support the work
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y8CX2QA) <br>
+I pretty much made this for a community server of mine which is totally community funded. If it went dead then I don't see a point in maintaining the script as well.
