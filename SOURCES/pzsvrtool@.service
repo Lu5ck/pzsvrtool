@@ -10,7 +10,7 @@ Type=forking
 RemainAfterExit=no
 ExecStart=/usr/bin/tmux -L pzsvrtool new-session -d -s pzsvrtool_%i /usr/libexec/pzsvrtool/pzsvrtool_wrapper.sh
 ExecStop=/usr/libexec/pzsvrtool/pzsvrtool_gracefulstop.sh
-TimeoutAbortSec=20m
+TimeoutStopSec=20m
 
 [Install]
 WantedBy=default.target
