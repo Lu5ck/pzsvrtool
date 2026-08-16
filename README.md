@@ -21,6 +21,11 @@ An lightweight terminal toolchain for running Project Zomboid on Linux Server
 - Graceful shutdown on unplanned reboot or shutdown (runs PZ as a systemd service)
 - User password reset, zombie population reset, and more
 
+**SystemD service**
+<img src="SHOWCASE/systemd service.jpg" alt="Centered Image" style="display: block; margin: 0 auto; width: 100%; max-width: 100%; height: auto;">
+
+**Timeout** :Beyond the default service 1.5 minutes and default user 2 minutes
+<img src="SHOWCASE/systemd service timeout.JPG" alt="Centered Image" style="display: block; margin: 0 auto; width: 100%; max-width: 100%; height: auto;">
 
 ## 🐧 Supported Platforms
 Tested on Almalinux 9.8. Theorically the scripts should work in all linux enviroments as long the followings are met<details>
