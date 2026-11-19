@@ -65,12 +65,31 @@ async def read_keys(pad: curses.window, input_win: curses.window, scrnHeight):
                     pad.noutrefresh(pad_pos, 0, 0, 0, curses.LINES - 2, width - 1)
                     input_win.refresh()
                 elif char == curses.KEY_RESIZE:
-                    bRunning = False
-                    logProc.terminate()
-                    await logProc.wait()
-                    logProc = None
-                    curses.endwin()
-                    print("[pzsvrtool] Console does not support resizing")
+                    # Update terminal dimensions
+                    curses.update_lines_cols()
+                    height, width = curses.LINES, curses.COLS
+
+                    # Ensure terminal is large enough
+                    if height < 2 or width < 2:
+                        continue
+                    # Resize the log pad
+                    pad.resize(max_lines, width)
+                    # Resize and reposition the input window
+                    input_win.resize(1, width)
+                    input_win.mvwin(height - 1, 0)
+                    # Update local dimensions
+                    scrnHeight = height
+                    _, width = pad.getmaxyx()
+                    # Keep scroll position valid
+                    pad_pos = min(pad_pos, pad_last_pos)
+                    # Redraw the interface
+                    input_win.erase()
+                    pad.noutrefresh(
+                        pad_pos, 0,
+                        0, 0,
+                        height - 2, width - 1
+                    )
+                    input_win.refresh()
                     break
             elif isinstance(char, str):
                 if char == "\n": # Enter
@@ -97,7 +116,6 @@ async def read_keys(pad: curses.window, input_win: curses.window, scrnHeight):
 
 async def display_log(pad: curses.window, input_win: curses.window, tailfile):
     global max_lines, logProc, bRunning, pad_pos, pad_last_pos, scrolling
-    height, width = pad.getmaxyx()
     log_lines_count = -1
     pad_pos = 0
     pad_last_pos = 0
@@ -114,6 +132,7 @@ async def display_log(pad: curses.window, input_win: curses.window, tailfile):
                     continue
 
                 line = line.decode("utf-8").strip()
+                height, width = pad.getmaxyx()
 
                 if chatOnly:
                     if not "Message 'ChatMessage{chat=" in line and not "DISCORD: User '" in line and not "command entered via server console (System.in): \"servermsg " in line:
